@@ -113,10 +113,6 @@
                 font-size: 1rem;
             }
         }
-
-        #redirect-btn {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -125,9 +121,6 @@
         <p class="text">Click below to watch a Fanfiction!</p>
         <button onclick="showRandomVideo()">SURPRISE ME</button>
         <div id="video-container"></div>
-        <button id="redirect-btn">Watch on YouTube</button>
-        <script src="youtube.js"></script> 
-
     </div>
 
     <script>
@@ -198,11 +191,6 @@
             videoContainer.style.animation = "none";
             videoContainer.offsetHeight; /* trigger reflow */
             videoContainer.style.animation = "videoAppear 0.5s ease";
-    
-            // Show the "Watch on YouTube" button
-            const redirectBtn = document.getElementById("redirect-btn");
-            redirectBtn.style.display = "block";
-            redirectBtn.setAttribute("data-video-id", videoId); // Set the video ID as a data attribute
         }
     
         // Initialize API fetching
