@@ -126,8 +126,8 @@
 
     <script>
         // Replace with your YouTube API key and channel ID
-        const API_KEY = 'AIzaSyAqyzfJgTUMHKPWCDskvsHvOP63SM9KduY';
-        const CHANNEL_ID = 'UC07yCsHcuCVcNg9HIM_A1aA';
+        const API_KEY = process.env.YOUTUBE_API_KEY;
+const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID;
 
         let videoIds = [];
 
