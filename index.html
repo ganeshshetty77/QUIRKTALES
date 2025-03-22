@@ -99,6 +99,22 @@
             font-size: 1.2rem;
         }
 
+        #open-in-app {
+            background: #E84A5F;
+            margin-top: 0;
+        }
+
+        #open-in-app:hover {
+            background: #FF847C;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
         @media (max-width: 768px) {
             .container {
                 width: 95%;
@@ -119,7 +135,12 @@
     <div class="container">
         <h1>RANDOM FANFIC</h1>
         <p class="text">Click below to watch a Fanfiction!</p>
-        <button onclick="showRandomVideo()">SURPRISE ME</button>
+        <div class="button-container">
+            <button onclick="showRandomVideo()">SURPRISE ME</button>
+            <div id="app-button-container" style="display: none;">
+                <button id="open-in-app" onclick="openInYouTubeApp()">OPEN IN YOUTUBE APP</button>
+            </div>
+        </div>
         <div id="video-container"></div>
     </div>
 
@@ -127,6 +148,7 @@
         let YOUTUBE_API_KEY = "";
         let YOUTUBE_CHANNEL_ID = "";
         let videoIds = [];
+        let currentVideoId = "";
     
         async function fetchAPIKeys() {
             try {
@@ -177,6 +199,7 @@
     
             const randomIndex = Math.floor(Math.random() * videoIds.length);
             const videoId = videoIds[randomIndex];
+            currentVideoId = videoId; // Store the current video ID
     
             const videoContainer = document.getElementById("video-container");
             videoContainer.innerHTML = `
@@ -191,6 +214,29 @@
             videoContainer.style.animation = "none";
             videoContainer.offsetHeight; /* trigger reflow */
             videoContainer.style.animation = "videoAppear 0.5s ease";
+            
+            // Show the app button
+            document.getElementById("app-button-container").style.display = "block";
+        }
+        
+        function openInYouTubeApp() {
+            if (!currentVideoId) return;
+            
+            // Check if user is on Android (most likely to have YouTube app)
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // Try to open in the YouTube app
+                window.location.href = `youtube://www.youtube.com/watch?v=${currentVideoId}`;
+                
+                // Fallback to browser after a short delay (in case app isn't installed)
+                setTimeout(() => {
+                    window.location.href = `https://www.youtube.com/watch?v=${currentVideoId}`;
+                }, 1000);
+            } else {
+                // On other platforms, just open in browser
+                window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank');
+            }
         }
     
         // Initialize API fetching
