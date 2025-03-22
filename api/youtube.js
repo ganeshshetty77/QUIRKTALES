@@ -6,9 +6,9 @@ export default function handler(req, res) {
   }
 document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("redirect-btn");
-    const videoId = "dQw4w9WgXcQ"; // Replace with actual YouTube video ID
 
     button.addEventListener("click", () => {
+        const videoId = button.getAttribute("data-video-id"); // Get the video ID from the button's data attribute
         const youtubeAppLink = `youtube://www.youtube.com/watch?v=${videoId}`;
         const youtubeWebLink = `https://www.youtube.com/watch?v=${videoId}`;
         const isMobile = /Mobi|Android/i.test(navigator.userAgent);
@@ -24,4 +24,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-  

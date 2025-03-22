@@ -113,6 +113,10 @@
                 font-size: 1rem;
             }
         }
+
+        #redirect-btn {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -194,6 +198,11 @@
             videoContainer.style.animation = "none";
             videoContainer.offsetHeight; /* trigger reflow */
             videoContainer.style.animation = "videoAppear 0.5s ease";
+    
+            // Show the "Watch on YouTube" button
+            const redirectBtn = document.getElementById("redirect-btn");
+            redirectBtn.style.display = "block";
+            redirectBtn.setAttribute("data-video-id", videoId); // Set the video ID as a data attribute
         }
     
         // Initialize API fetching
