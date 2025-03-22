@@ -3,8 +3,6 @@ const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
-git init
-
 // API endpoint to get videos
 app.get('/api/videos', async (req, res) => {
   try {
