@@ -22,7 +22,5 @@
   ],
   "rewrites": [
     { "source": "/api/youtube", "destination": "/api/youtube.js" }
-  ],
-  "buildCommand": "echo 'No build step required'",
-  "outputDirectory": "."
+  ]
 }

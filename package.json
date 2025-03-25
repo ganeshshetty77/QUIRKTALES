@@ -3,9 +3,8 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-      "dev": "serve .",
-      "build": "echo 'No build step required'",
-      "start": "serve ."
+      "start": "serve .",
+      "dev": "serve ."
     },
     "dependencies": {
       "serve": "^14.2.1"
