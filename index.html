@@ -3,283 +3,839 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Videos</title>
+    <title>VeggieFIcs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        main.container {
+            margin-bottom: 3rem;
+        }
+        /* Header - Responsive */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 8px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 1rem;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            background-color: #334155;
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .upload-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+        }
+
+        .upload-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        .notification-icon, .profile-icon {
+            background-color: #334155;
+            width: 2.75rem;
+            height: 2.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        .notification-icon:hover, .profile-icon:hover {
+            background-color: #475569;
+        }
+
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 250px;
+            height: 100vh;
+            background-color: #1e293b;
+            padding: 1rem;
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .close-menu {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .mobile-menu-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .mobile-menu-actions .upload-btn,
+        .mobile-menu-actions .notification-icon,
+        .mobile-menu-actions .profile-icon {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            width: 100%;
+            height: 2.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+        .mobile-menu-actions .upload-btn:hover,
+        .mobile-menu-actions .notification-icon:hover,
+        .mobile-menu-actions .profile-icon:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Hero Slider - Responsive */
+        .hero-slider {
+            position: relative;
+            margin-top: 1rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            background-color: #1e293b;
+            aspect-ratio: 16/9;
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        .carousel-item {
+            min-width: 100%;
+            position: relative;
+        }
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+            backdrop-filter: blur(4px);
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        .carousel-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .carousel-prev {
+            left: 0.5rem;
+        }
+        .carousel-next {
+            right: 0.5rem;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(4px);
+        }
+        .carousel-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .carousel-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        .hero-overlay {
+            position: relative;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #6E3CBC;
-            color: #B8E4F0;
-        }
-
-        .container {
+            background-color: #334155;
+            padding: 2rem;
             text-align: center;
-            width: 90%;
-            max-width: 1200px;
-            padding-bottom: 2rem;
+        }
+        .hero-overlay::before {
+            content: "▶️";
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .hero-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .hero-meta {
+            color: #cbd5e1;
+            font-size: 0.875rem;
         }
 
-        h1 {
-            color: #98BAE7;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            background: #7267CB;
-            color: #B8E4F0;
-            border: none;
-            border-radius: 50px;
+        /* Category Buttons - Responsive */
+        .category-buttons {
+            display: flex;
+            gap: 0.75rem;
             margin: 1.5rem 0;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            outline: 2px solid white; /* Ring outside the button */
-            outline-offset: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .category-buttons::-webkit-scrollbar {
+            display: none;
+        }
+        .category-btn {
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .category-btn.active {
+            background-color: #6366f1;
         }
 
-        button:hover {
-            background: #98BAE7;
-            color: #6E3CBC;
-            transform: scale(1.05);
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.4),
-                transparent
-            );
-            transition: 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
-        }
-
-        #video-container {
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            position: relative;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #98BAE7;
+        /* Quick Access Blocks - Responsive */
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
             margin-bottom: 2rem;
         }
+        .quick-access-block {
+            background-color: #1e293b;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: block;
+            border: 1px solid transparent;
+        }
+        .quick-access-block:hover {
+            transform: translateY(-4px);
+            background-color: #334155;
+            border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+        .quick-access-icon {
+            font-size: 2rem;
+            color: #6366f1;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .quick-access-block:hover .quick-access-icon {
+            transform: scale(1.1);
+        }
+        .quick-access-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        .quick-access-block:hover .quick-access-title {
+            color: #6366f1;
+        }
+        .quick-access-desc {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+        .quick-access-block:hover .quick-access-desc {
+            color: #cbd5e1;
+        }
 
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Trending Videos - Responsive */
+        .trending-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        .trending-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .show-all-btn {
+            color: #6366f1;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .show-all-btn:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+        .trending-videos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .trending-videos.expanded {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        .video-card {
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .video-card:hover {
+            transform: translateY(-4px);
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #334155;
+        }
+        .video-thumbnail img {
             width: 100%;
             height: 100%;
-            border: none;
+            object-fit: cover;
         }
-
-        .text {
-            color: #ffffff;
-            margin: 0.5rem;
-            font-size: 1.2rem;
+        .video-duration {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
         }
-
-        #open-in-app {
-            background: #E84A5F;
-            margin-top: 0;
+        .video-details {
+            padding: 1rem;
         }
-
-        #open-in-app:hover {
-            background: #FF847C;
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-
-        .button-container {
-            display: flex;
-            flex-direction: column;
+        .video-meta {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        .hidden-videos {
+            display: none;
+        }
+        .hidden-videos.show {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1rem;
-            align-items: center;
-        }
-
-        .suggestion-button {
-            background: #5993df;
-            font-size: 0.9rem;
-            padding: 10px 20px;
             margin-top: 1rem;
         }
 
-        .suggestion-button:hover {
-            background: #8daed8;
-        }
-
-        .footer {
-            margin-top: 2rem;
-            width: 100%;
-        }
-
+        /* Small Devices */
         @media (max-width: 768px) {
-            .container {
-                width: 95%;
+            .header {
+                flex-wrap: wrap;
             }
             
-            h1 {
-                font-size: 2rem;
+            .search-bar {
+                order: 3;
+                width: 100%;
+                margin: 1rem 0;
             }
             
-            button {
-                padding: 12px 24px;
-                font-size: 1rem;
+            .header-actions {
+                display: none;
+            }
+
+            .hamburger-menu {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+        }
+
+        /* Mobile Devices */
+        @media (max-width: 480px) {
+            .quick-access {
+                grid-template-columns: 1fr;
+            }
+            .trending-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .show-all-btn {
+                align-self: flex-start;
+                margin-top: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>RANDOM FANFIC</h1>
-        <p class="text">Click below to watch a Fanfiction!</p>
-        <div class="button-container">
-            <button onclick="showRandomVideo()">SURPRISE ME</button>
-            <div id="app-button-container" style="display: none;">
-                <button id="open-in-app" onclick="openInYouTubeApp()">OPEN IN YOUTUBE APP</button>
-            </div>
+    <!-- Header -->
+    <header class="container header">
+        <div class="logo">
+            <span>📺</span> VeggieFics
         </div>
-        <div id="video-container"></div>
-        
-        <div class="footer">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScFWF-eWZ40mjnOTgE4uE5kzUXML5yrefsnNXxray9AeVMi6A/viewform?usp=dialog" target="_blank">
-                <button class="suggestion-button">SUGGEST A FEATURE</button>
-            </a>
+        <div class="search-bar">
+            <input type="text" placeholder="Search videos, channels, or creators">
+        </div>
+        <div class="header-actions">
+            <a href="https://www.youtube.com/@cabbageheadfanfics" target="_blank" class="upload-btn">Subscribe</a>
+            <div class="notification-icon">🔔</div>
+            <div class="profile-icon">👤</div>
+        </div>
+        <div class="hamburger-menu">☰</div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <h3>Menu</h3>
+            <div class="close-menu">✕</div>
+        </div>
+        <div class="mobile-menu-actions">
+            <a href="https://www.youtube.com/@cabbageheadfanfics" target="_blank" class="upload-btn">Subscribe</a>
+            <button class="notification-icon">🔔 Notifications</button>
+            <button class="profile-icon">👤 Profile</button>
         </div>
     </div>
 
+    <main class="container">
+        <!-- Hero Slider -->
+        <section class="hero-slider">
+            <div class="carousel">
+                <div class="carousel-item">
+                    <div class="hero-overlay">
+                        <h2 class="hero-title">Featured Video 1</h2>
+                        <p class="hero-meta">Latest release from our channel</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="hero-overlay">
+                        <h2 class="hero-title">Featured Video 2</h2>
+                        <p class="hero-meta">Most popular this week</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="hero-overlay">
+                        <h2 class="hero-title">Featured Video 3</h2>
+                        <p class="hero-meta">Editor's choice</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-nav carousel-prev">‹</button>
+            <button class="carousel-nav carousel-next">›</button>
+            <div class="carousel-dots">
+                <div class="carousel-dot active"></div>
+                <div class="carousel-dot"></div>
+                <div class="carousel-dot"></div>
+            </div>
+        </section>
+
+        <!-- Category Buttons -->
+        <nav class="category-buttons">
+            <button class="category-btn active">All</button>
+            <button class="category-btn">Gaming</button>
+            <button class="category-btn">Music</button>
+            <button class="category-btn">Education</button>
+            <button class="category-btn">Technology</button>
+            <button class="category-btn">Entertainment</button>
+        </nav>
+
+        <!-- Quick Access Blocks -->
+        <section class="quick-access">
+            <a href="random-finder.html" class="quick-access-block">
+                <div class="quick-access-icon">🔀</div>
+                <h3 class="quick-access-title">Random Finder</h3>
+                <p class="quick-access-desc">Discover new content randomly</p>
+            </a>
+            <a href="gaming-hub.html" class="quick-access-block">
+                <div class="quick-access-icon">🎮</div>
+                <h3 class="quick-access-title">Gaming Hub</h3>
+                <p class="quick-access-desc">Access gaming content</p>
+            </a>
+            <a href="#" class="quick-access-block">
+                <div class="quick-access-icon">⭐</div>
+                <h3 class="quick-access-title">Underrated Authors</h3>
+                <p class="quick-access-desc">Discover amazing hidden talent</p>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScFWF-eWZ40mjnOTgE4uE5kzUXML5yrefsnNXxray9AeVMi6A/viewform" target="_blank" class="quick-access-block">
+                <div class="quick-access-icon">📚</div>
+                <h3 class="quick-access-title">Suggest Fics</h3>
+                <p class="quick-access-desc">Suggest fics for us to cover</p>
+            </a>
+        </section>
+
+        <!-- Trending Videos -->
+        <section>
+            <div class="trending-header">
+                <h2 class="trending-title">Trending Videos</h2>
+                <button class="show-all-btn">Show All</button>
+            </div>
+            <div class="trending-videos">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-videos">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
     <script>
+        // YouTube API configuration
         let YOUTUBE_API_KEY = "";
         let YOUTUBE_CHANNEL_ID = "";
         let videoIds = [];
         let currentVideoId = "";
-    
+
         async function fetchAPIKeys() {
             try {
                 const response = await fetch('/api/youtube');
                 const data = await response.json();
                 YOUTUBE_API_KEY = data.apiKey;
                 YOUTUBE_CHANNEL_ID = data.channelId;
-    
+
                 if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
-                    fetchVideos();
+                    fetchLatestVideos();
                 } else {
                     console.error("API Key or Channel ID is missing.");
+                    showPlaceholderContent();
                 }
             } catch (error) {
                 console.error("Error fetching API keys:", error);
+                showPlaceholderContent();
             }
         }
-    
-        async function fetchVideos() {
-            if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-                console.error("API Key or Channel ID not loaded yet.");
-                return;
+
+        // Function to format view count
+        function formatViewCount(viewCount) {
+            if (viewCount >= 1000000) {
+                return (viewCount / 1000000).toFixed(1) + 'M';
+            } else if (viewCount >= 1000) {
+                return (viewCount / 1000).toFixed(1) + 'K';
             }
-    
+            return viewCount;
+        }
+
+        // Function to format date
+        function formatDate(publishedAt) {
+            const date = new Date(publishedAt);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 7) return `${days} days ago`;
+            if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+            if (days < 365) return `${Math.floor(days / 30)} months ago`;
+            return `${Math.floor(days / 365)} years ago`;
+        }
+
+        // Function to fetch latest videos
+        async function fetchLatestVideos() {
             try {
-                const channelResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}`
-                );
-                const channelData = await channelResponse.json();
-                const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
-    
-                const playlistResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${uploadsPlaylistId}&key=${YOUTUBE_API_KEY}`
-                );
-                const playlistData = await playlistResponse.json();
-    
-                videoIds = playlistData.items.map(item => item.snippet.resourceId.videoId);
+                const response = await fetch('/api/youtube');
+                const data = await response.json();
+                console.log(data); // Test response
             } catch (error) {
                 console.error("Error fetching videos:", error);
             }
         }
-    
-        function showRandomVideo() {
-            if (videoIds.length === 0) {
-                alert("Videos not loaded yet! Please try again!");
-                return;
-            }
-    
-            const randomIndex = Math.floor(Math.random() * videoIds.length);
-            const videoId = videoIds[randomIndex];
-            currentVideoId = videoId; // Store the current video ID
-    
-            const videoContainer = document.getElementById("video-container");
-            videoContainer.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+
+        // Function to show placeholder content if API fails
+        function showPlaceholderContent() {
+            const carousel = document.querySelector('.carousel');
+            carousel.innerHTML = `
+                <div class="carousel-item">
+                    <div class="hero-overlay">
+                        <h2 class="hero-title">Unable to load videos</h2>
+                        <p class="hero-meta">Please try again later</p>
+                    </div>
+                </div>
             `;
-    
-            // Add animation effect
-            videoContainer.style.animation = "none";
-            videoContainer.offsetHeight; /* trigger reflow */
-            videoContainer.style.animation = "videoAppear 0.5s ease";
-            
-            // Show the app button
-            document.getElementById("app-button-container").style.display = "block";
         }
-        
-        function openInYouTubeApp() {
-            if (!currentVideoId) return;
-            
-            // Check if user is on Android (most likely to have YouTube app)
-            const isAndroid = /Android/i.test(navigator.userAgent);
-            
-            if (isAndroid) {
-                // Try to open in the YouTube app
-                window.location.href = `youtube://www.youtube.com/watch?v=${currentVideoId}`;
-                
-                // Fallback to browser after a short delay (in case app isn't installed)
-                setTimeout(() => {
-                    window.location.href = `https://www.youtube.com/watch?v=${currentVideoId}`;
-                }, 1000);
-            } else {
-                // On other platforms, just open in browser
-                window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank');
+
+        // Initialize carousel functionality
+        function initializeCarousel() {
+            const carousel = document.querySelector('.carousel');
+            const carouselItems = document.querySelectorAll('.carousel-item');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+            const dots = document.querySelectorAll('.carousel-dot');
+            let currentSlide = 0;
+            const totalSlides = carouselItems.length;
+
+            function updateCarousel() {
+                carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
             }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateCarousel();
+                });
+            });
+
+            // Auto-advance carousel
+            let autoAdvance = setInterval(nextSlide, 5000);
+
+            // Pause auto-advance on hover
+            carousel.addEventListener('mouseenter', () => {
+                clearInterval(autoAdvance);
+            });
+
+            carousel.addEventListener('mouseleave', () => {
+                autoAdvance = setInterval(nextSlide, 5000);
+            });
+
+            // Add touch support for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            carousel.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            carousel.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                if (touchStartX - touchEndX > 50) {
+                    nextSlide();
+                } else if (touchEndX - touchStartX > 50) {
+                    prevSlide();
+                }
+            });
         }
-    
-        // Initialize API fetching
-        fetchAPIKeys();
-    
-        // Add keyframe animation
-        const style = document.createElement("style");
-        style.textContent = `
-            @keyframes videoAppear {
-                0% { transform: scale(0.9); opacity: 0; }
-                100% { transform: scale(1); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
+
+        // Fetch API keys when page loads
+        document.addEventListener('DOMContentLoaded', fetchLatestVideos);
+
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const closeMenu = document.querySelector('.close-menu');
+        const showAllBtn = document.querySelector('.show-all-btn');
+        const hiddenVideos = document.querySelector('.hidden-videos');
+        const trendingVideos = document.querySelector('.trending-videos');
+
+        // Existing event listeners
+        hamburgerMenu.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+
+        showAllBtn.addEventListener('click', () => {
+            hiddenVideos.classList.toggle('show');
+            trendingVideos.classList.toggle('expanded');
+            showAllBtn.textContent = hiddenVideos.classList.contains('show') ? 'Show Less' : 'Show All';
+        });
     </script>
-    <script>
-        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-      </script>
-      <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
