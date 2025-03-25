@@ -1,4 +1,25 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "gaming-hub.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "random-finder.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
   "rewrites": [
     { "source": "/api/youtube", "destination": "/api/youtube.js" }
   ]

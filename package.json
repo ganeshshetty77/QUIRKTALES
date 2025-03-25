@@ -2,9 +2,9 @@
   "name": "veggiefics",
   "version": "1.0.0",
   "description": "A platform for discovering and sharing fanfics.",
-  "main": "server.js",
+  "main": "index.html",
   "scripts": {
-    "start": "node server.js",
+    "start": "webpack serve --mode development --open",
     "build": "webpack --mode production"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "@vercel/analytics": "^1.5.0",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2",
     "babel-loader": "^8.2.2",
     "@babel/core": "^7.14.0",
     "@babel/preset-env": "^7.14.1",

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Finder - VeggieFIcs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        main.container {
+            margin-bottom: 3rem;
+        }
+        /* Header - Responsive */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 8px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+        .back-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Random Finder Content */
+        .random-finder {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .random-finder-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #6366f1;
+        }
+        .random-finder-desc {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .random-button {
+            background-color: #6366f1;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        .random-button:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+        .random-result {
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+        }
+        .random-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #6366f1;
+        }
+        .result-desc {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+        .result-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            color: #cbd5e1;
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-wrap: wrap;
+            }
+            .random-finder-title {
+                font-size: 1.75rem;
+            }
+            .random-button {
+                width: 100%;
+                padding: 0.875rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="container header">
+        <a href="index.html" class="logo">
+            <span>📺</span> VeggieFics
+        </a>
+        <a href="index.html" class="back-btn">
+            <span>←</span> Back to Home
+        </a>
+    </header>
+
+    <main class="container">
+        <section class="random-finder">
+            <h1 class="random-finder-title">Random Video Finder</h1>
+            <p class="random-finder-desc">Discover random videos from our collection. Click the button below to find something new!</p>
+            
+            <button class="random-button">Find Random Video</button>
+
+            <div class="random-result">
+                <h2 class="result-title">Your Random Video</h2>
+                <p class="result-desc">Here's a random video we found for you!</p>
+                <div class="result-meta">
+                    <span>Category: Gaming</span>
+                    <span>•</span>
+                    <span>Duration: 15:30</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const randomButton = document.querySelector('.random-button');
+        const randomResult = document.querySelector('.random-result');
+
+        randomButton.addEventListener('click', () => {
+            randomResult.classList.add('show');
+            // Here you would typically fetch random video data from your backend
+            // For now, we're just showing the result container
+        });
+    </script>
+</body>
+</html> 

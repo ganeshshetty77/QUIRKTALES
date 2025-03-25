@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Hub - VeggieFIcs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        main.container {
+            margin-bottom: 3rem;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 8px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+        .back-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Game Content */
+        .game-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .game-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #6366f1;
+        }
+        .game-desc {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #6366f1;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            display: inline-block;
+        }
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .video-card {
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .video-card:hover {
+            transform: translateY(-4px);
+        }
+        .video-card.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #334155;
+        }
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-details {
+            padding: 1rem;
+        }
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .video-meta {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        .views-count {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .video-card.revealed .views-count {
+            display: block;
+        }
+        .result-message {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .result-message.show {
+            opacity: 1;
+        }
+        .result-message.correct {
+            color: #22c55e;
+        }
+        .result-message.wrong {
+            color: #ef4444;
+        }
+        .next-round-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .next-round-btn.show {
+            display: inline-block;
+        }
+        .next-round-btn:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .videos-container {
+                grid-template-columns: 1fr;
+            }
+            .game-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="container header">
+        <a href="index.html" class="logo">
+            <span>📺</span> VeggieFics
+        </a>
+        <a href="index.html" class="back-btn">
+            <span>←</span> Back to Home
+        </a>
+    </header>
+
+    <main class="container">
+        <section class="game-container">
+            <h1 class="game-title">View Count Battle</h1>
+            <p class="game-desc">Can you guess which video has more views? Click on the video you think has more views!</p>
+            
+            <div class="score-display">
+                Current Score: <span id="score">0</span>
+            </div>
+
+            <div class="result-message" id="resultMessage"></div>
+
+            <div class="videos-container" id="videosContainer">
+                <!-- Videos will be dynamically inserted here -->
+            </div>
+
+            <button class="next-round-btn" id="nextRoundBtn">Next Round</button>
+        </section>
+    </main>
+
+    <script>
+        // Sample video data (in a real app, this would come from YouTube API)
+        const sampleVideos = [
+            {
+                thumbnail: "https://i.ytimg.com/vi/VIDEO1/maxresdefault.jpg",
+                title: "Amazing Gaming Moment #1",
+                views: 1500000
+            },
+            {
+                thumbnail: "https://i.ytimg.com/vi/VIDEO2/maxresdefault.jpg",
+                title: "Epic Gaming Compilation",
+                views: 2000000
+            },
+            {
+                thumbnail: "https://i.ytimg.com/vi/VIDEO3/maxresdefault.jpg",
+                title: "Best Gaming Fails 2024",
+                views: 800000
+            },
+            {
+                thumbnail: "https://i.ytimg.com/vi/VIDEO4/maxresdefault.jpg",
+                title: "Pro Gamer Moments",
+                views: 3000000
+            }
+        ];
+
+        let score = 0;
+        let currentVideos = [];
+        let shouldResetScore = false;
+
+        function formatViews(views) {
+            if (views >= 1000000) {
+                return (views / 1000000).toFixed(1) + 'M';
+            } else if (views >= 1000) {
+                return (views / 1000).toFixed(1) + 'K';
+            }
+            return views;
+        }
+
+        function getRandomVideos() {
+            const shuffled = [...sampleVideos].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 2);
+        }
+
+        function createVideoCard(video, index) {
+            return `
+                <div class="video-card" onclick="makeGuess(${index})">
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <div class="views-count">${formatViews(video.views)} views</div>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">${video.title}</h3>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showResult(correct) {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.textContent = correct ? 'Correct! +1 Point' : 'Wrong! Click Next Round to try again';
+            resultMessage.className = `result-message show ${correct ? 'correct' : 'wrong'}`;
+            
+            document.querySelectorAll('.video-card').forEach(card => {
+                card.classList.add('revealed', 'disabled');
+            });
+
+            if (!correct) {
+                shouldResetScore = true;
+            }
+
+            document.getElementById('nextRoundBtn').classList.add('show');
+        }
+
+        function makeGuess(index) {
+            const otherIndex = index === 0 ? 1 : 0;
+            const correct = currentVideos[index].views > currentVideos[otherIndex].views;
+
+            if (correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+
+            showResult(correct);
+        }
+
+        function startNewRound() {
+            if (shouldResetScore) {
+                score = 0;
+                document.getElementById('score').textContent = score;
+                shouldResetScore = false;
+            }
+            
+            currentVideos = getRandomVideos();
+            const videosContainer = document.getElementById('videosContainer');
+            videosContainer.innerHTML = currentVideos.map(createVideoCard).join('');
+            
+            document.getElementById('resultMessage').className = 'result-message';
+            document.getElementById('nextRoundBtn').classList.remove('show');
+        }
+
+        document.getElementById('nextRoundBtn').addEventListener('click', startNewRound);
+
+        // Start the first round
+        startNewRound();
+    </script>
+</body>
+</html> 
