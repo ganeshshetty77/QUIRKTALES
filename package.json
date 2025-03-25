@@ -1,28 +1,13 @@
 {
-  "name": "veggiefics",
-  "version": "1.0.0",
-  "description": "A platform for discovering and sharing fanfics.",
-  "main": "index.html",
-  "scripts": {
-    "start": "webpack serve --mode development --open",
-    "build": "webpack --mode production"
-  },
-  "dependencies": {
-    "express": "^4.17.1",
-    "dotenv": "^10.0.0",
-    "node-fetch": "^2.6.9"
-  },
-  "devDependencies": {
-    "@vercel/analytics": "^1.5.0",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2",
-    "babel-loader": "^8.2.2",
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.1",
-    "style-loader": "^2.0.0",
-    "css-loader": "^5.2.0"
-  },
-  "author": "Your Name",
-  "license": "MIT"
-}
+    "name": "veggiefics",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "dev": "serve",
+      "build": "echo 'No build step required'",
+      "start": "serve"
+    },
+    "dependencies": {
+      "serve": "^14.2.1"
+    }
+  }
