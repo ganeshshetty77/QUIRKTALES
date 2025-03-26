@@ -415,8 +415,9 @@
         }
         .trending-videos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(2, 1fr); /* 2 videos per row on large screens */
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         .trending-videos.expanded {
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -502,7 +503,7 @@
             }
 
             .trending-videos {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));  /* Even smaller on mobile */
+                grid-template-columns: 1fr; /* 1 video per row on small screens */
             }
             
             .video-card {
@@ -556,6 +557,14 @@
         a.hero-overlay {
             text-decoration: none !important;
         }
+
+        .trending-section {
+            margin-bottom: 3rem;
+        }
+
+        .trending-category {
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -565,7 +574,7 @@
             <span>📺</span> VeggieFics
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Search videos, channels, or creators">
+            <input type="text" placeholder="Search videos...">
         </div>
         <div class="header-actions">
             <a href="https://www.youtube.com/@cabbageheadfanfics" target="_blank" class="upload-btn">Subscribe</a>
@@ -677,101 +686,22 @@
         </section>
 
         <!-- Trending Videos -->
-        <section>
-            <div class="trending-header">
-                <h2 class="trending-title">Trending Videos</h2>
-                <button class="show-all-btn">Show All</button>
-            </div>
-            <div class="trending-videos">
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
+        <section class="trending-section">
+            <div class="trending-category">
+                <div class="trending-header">
+                    <h2 class="trending-title">Most Viewed Videos</h2>
                 </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
-                </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
-                </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
+                <div class="trending-videos" id="mostViewedVideos">
+                    <!-- Videos will be dynamically inserted here -->
                 </div>
             </div>
-            <div class="hidden-videos">
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
+
+            <div class="trending-category">
+                <div class="trending-header">
+                    <h2 class="trending-title">Most Liked Videos</h2>
                 </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
-                </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
-                </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
+                <div class="trending-videos" id="mostLikedVideos">
+                    <!-- Videos will be dynamically inserted here -->
                 </div>
             </div>
         </section>
@@ -1001,7 +931,9 @@
 
         // Initialize everything when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            fetchAPIKeys();
+            fetchAPIKeys().then(() => {
+                fetchTrendingVideos();
+            });
             initializeCarousel();
 
             // Wrap the search input in a form
@@ -1152,6 +1084,90 @@
             sanitized = sanitized.slice(0, 100);
             
             return sanitized;
+        }
+
+        // Add these functions after your existing JavaScript code
+        async function fetchTrendingVideos() {
+            try {
+                // Fetch up to 50 videos from the channel
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&order=date&maxResults=50&type=video`);
+                const data = await response.json();
+                
+                if (data.items && data.items.length > 0) {
+                    const videoIds = data.items.map(item => item.id.videoId).join(',');
+                    
+                    // Fetch detailed statistics for all videos
+                    const statsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=statistics,contentDetails`);
+                    const statsData = await statsResponse.json();
+                    
+                    // Combine video data with statistics
+                    const videosWithStats = data.items.map(item => {
+                        const stats = statsData.items.find(stat => stat.id === item.id.videoId);
+                        return {
+                            ...item,
+                            statistics: stats.statistics,
+                            contentDetails: stats.contentDetails
+                        };
+                    });
+                    
+                    // Sort by views and likes
+                    const mostViewed = [...videosWithStats].sort((a, b) => 
+                        parseInt(b.statistics.viewCount) - parseInt(a.statistics.viewCount)
+                    ).slice(0, 2);
+                    
+                    const mostLiked = [...videosWithStats].sort((a, b) => 
+                        parseInt(b.statistics.likeCount) - parseInt(a.statistics.likeCount)
+                    ).slice(0, 2);
+                    
+                    // Display videos
+                    await displayTrendingVideos(mostViewed, 'mostViewedVideos');
+                    await displayTrendingVideos(mostLiked, 'mostLikedVideos');
+                }
+            } catch (error) {
+                console.error("Error fetching trending videos:", error);
+                showTrendingError();
+            }
+        }
+
+        async function displayTrendingVideos(videos, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            for (const video of videos) {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" style="text-decoration: none; color: inherit;">
+                        <div class="video-thumbnail">
+                            <img src="${video.snippet.thumbnails.high.url}" alt="${video.snippet.title}">
+                            <span class="video-duration">${formatDuration(video.contentDetails.duration)}</span>
+                        </div>
+                        <div class="video-details">
+                            <h3 class="video-title">${video.snippet.title}</h3>
+                            <p class="video-meta">${formatViewCount(video.statistics.viewCount)} views</p>
+                            <p class="video-meta">
+                                ${formatViewCount(video.statistics.likeCount)} likes • 
+                                Uploaded ${formatDate(video.snippet.publishedAt)}
+                            </p>
+                        </div>
+                    </a>
+                `;
+                
+                container.appendChild(videoCard);
+            }
+        }
+
+        function showTrendingError() {
+            const containers = ['mostViewedVideos', 'mostLikedVideos'];
+            containers.forEach(containerId => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                        <h3>Unable to load videos</h3>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+            });
         }
     </script>
 </body>
