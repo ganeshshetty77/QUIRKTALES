@@ -1003,6 +1003,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchAPIKeys();
             initializeCarousel();
+
+            // Wrap the search input in a form
+            const searchInput = document.querySelector('.search-bar input');
+            const searchForm = document.createElement('form');
+            searchForm.id = 'searchForm';
+            searchInput.parentNode.insertBefore(searchForm, searchInput);
+            searchForm.appendChild(searchInput);
+
+            // Add form submit handler
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const query = searchInput.value.trim();
+                if (query.length >= 3) {
+                    window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+                }
+            });
         });
 
         const hamburgerMenu = document.querySelector('.hamburger-menu');
@@ -1113,28 +1129,6 @@
                 </div>
             `;
         }
-
-        // Add this to your existing DOMContentLoaded event listener
-        document.addEventListener('DOMContentLoaded', () => {
-            // ... existing code ...
-
-            // Add search functionality
-            const searchInput = document.querySelector('.search-bar input');
-            const debouncedSearch = debounce((query) => {
-                if (query.length >= 3) {
-                    searchVideos(query);
-                } else if (query.length === 0) {
-                    // Reset to original view when search is cleared
-                    document.getElementById('searchResults').style.display = 'none';
-                    document.querySelector('.trending-videos').closest('section').style.display = 'block';
-                }
-            }, 500);
-
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.trim();
-                debouncedSearch(query);
-            });
-        });
     </script>
 </body>
 </html>

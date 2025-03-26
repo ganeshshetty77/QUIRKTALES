@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header styles (same as index.html) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        /* Search Results Styles */
+        .search-results {
+            margin-top: 2rem;
+        }
+
+        .search-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .search-query {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .video-item {
+            display: flex;
+            gap: 1.5rem;
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .video-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .video-thumbnail {
+            flex: 0 0 360px;
+            position: relative;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .video-info {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .video-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .video-meta {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .video-description {
+            color: #cbd5e1;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .video-item {
+                flex-direction: column;
+            }
+
+            .video-thumbnail {
+                flex: 0 0 200px;
+            }
+
+            .video-info {
+                padding: 1rem;
+            }
+        }
+
+        /* Header Components */
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 1rem;
+        }
+
+        .search-bar form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            background-color: #334155;
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="container header">
+        <a href="index.html" class="logo">
+            <span>📺</span> VeggieFics
+        </a>
+        <div class="search-bar">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Search videos">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="search-header">
+            <h2 class="search-query">Search results for: <span id="queryText"></span></h2>
+        </div>
+        <div class="video-list" id="searchResults">
+            <!-- Results will be populated here -->
+        </div>
+    </main>
+
+    <script>
+        let YOUTUBE_API_KEY = "";
+        let YOUTUBE_CHANNEL_ID = "";
+
+        async function fetchAPIKeys() {
+            try {
+                const response = await fetch('/api/youtube');
+                const data = await response.json();
+                YOUTUBE_API_KEY = data.apiKey;
+                YOUTUBE_CHANNEL_ID = data.channelId;
+                
+                // Get search query from URL and perform search
+                const urlParams = new URLSearchParams(window.location.search);
+                const query = urlParams.get('q');
+                if (query) {
+                    document.getElementById('searchInput').value = query;
+                    document.getElementById('queryText').textContent = query;
+                    await searchVideos(query);
+                }
+            } catch (error) {
+                console.error("Error fetching API keys:", error);
+                showError("Failed to load API keys");
+            }
+        }
+
+        function formatViewCount(viewCount) {
+            if (viewCount >= 1000000) {
+                return (viewCount / 1000000).toFixed(1) + 'M';
+            } else if (viewCount >= 1000) {
+                return (viewCount / 1000).toFixed(1) + 'K';
+            }
+            return viewCount;
+        }
+
+        function formatDate(publishedAt) {
+            const date = new Date(publishedAt);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 7) return `${days} days ago`;
+            if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+            if (days < 365) return `${Math.floor(days / 30)} months ago`;
+            return `${Math.floor(days / 365)} years ago`;
+        }
+
+        function formatDuration(duration) {
+            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+            const hours = (match[1] || '').replace('H', '');
+            const minutes = (match[2] || '').replace('M', '');
+            const seconds = (match[3] || '').replace('S', '');
+            
+            if (hours) {
+                return `${hours}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+            }
+            return `${minutes || '0'}:${seconds.padStart(2, '0')}`;
+        }
+
+        async function searchVideos(query) {
+            try {
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=50`);
+                const data = await response.json();
+                
+                const resultsContainer = document.getElementById('searchResults');
+                resultsContainer.innerHTML = '';
+                
+                if (data.items && data.items.length > 0) {
+                    for (const item of data.items) {
+                        const videoId = item.id.videoId;
+                        
+                        // Fetch additional video details
+                        const detailsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails,statistics`);
+                        const detailsData = await detailsResponse.json();
+                        
+                        const duration = detailsData.items[0]?.contentDetails.duration || 'PT0M0S';
+                        const viewCount = detailsData.items[0]?.statistics.viewCount || '0';
+                        
+                        const videoElement = document.createElement('div');
+                        videoElement.className = 'video-item';
+                        videoElement.innerHTML = `
+                            <div class="video-thumbnail">
+                                <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
+                                    <img src="${item.snippet.thumbnails.high.url}" alt="${item.snippet.title}">
+                                    <span class="video-duration">${formatDuration(duration)}</span>
+                                </a>
+                            </div>
+                            <div class="video-info">
+                                <div>
+                                    <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="video-title">
+                                        ${item.snippet.title}
+                                    </a>
+                                    <p class="video-meta">${formatViewCount(viewCount)} views • ${formatDate(item.snippet.publishedAt)}</p>
+                                    <p class="video-description">${item.snippet.description}</p>
+                                </div>
+                            </div>
+                        `;
+                        
+                        resultsContainer.appendChild(videoElement);
+                    }
+                } else {
+                    showNoResults();
+                }
+            } catch (error) {
+                console.error("Error searching videos:", error);
+                showError("Error searching videos");
+            }
+        }
+
+        function showNoResults() {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = `
+                <div class="no-results">
+                    <h3>No videos found</h3>
+                    <p>Try different keywords</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = `
+                <div class="no-results">
+                    <h3>${message}</h3>
+                    <p>Please try again later</p>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAPIKeys();
+            
+            const searchForm = document.getElementById('searchForm');
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const query = document.getElementById('searchInput').value.trim();
+                if (query) {
+                    // Update URL with search query
+                    const url = new URL(window.location);
+                    url.searchParams.set('q', query);
+                    window.history.pushState({}, '', url);
+                    
+                    document.getElementById('queryText').textContent = query;
+                    searchVideos(query);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
