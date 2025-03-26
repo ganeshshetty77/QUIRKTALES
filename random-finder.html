@@ -235,16 +235,23 @@
             try {
                 console.log('Fetching API keys...');
                 const response = await fetch('/api/youtube');
-                const data = await response.json();
-                console.log('API response:', data);
-                YOUTUBE_API_KEY = data.apiKey;
-                YOUTUBE_CHANNEL_ID = data.channelId;
+                const text = await response.text();
 
-                if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
-                    console.log('API keys received, fetching videos...');
-                    fetchVideos();
-                } else {
-                    console.error("API Key or Channel ID is missing.");
+                try {
+                    const data = JSON.parse(text);
+                    console.log('API response:', data);
+                    YOUTUBE_API_KEY = data.apiKey;
+                    YOUTUBE_CHANNEL_ID = data.channelId;
+
+                    if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
+                        console.log('API keys received, fetching videos...');
+                        fetchVideos();
+                    } else {
+                        console.error("API Key or Channel ID is missing.");
+                    }
+                } catch (jsonError) {
+                    console.error("Error parsing JSON response:", jsonError);
+                    console.error("Response text:", text);
                 }
             } catch (error) {
                 console.error("Error fetching API keys:", error);
@@ -369,4 +376,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
