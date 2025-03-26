@@ -406,8 +406,9 @@
         }
         .trending-videos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 0 auto;
         }
         .trending-videos.expanded {
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -418,6 +419,9 @@
             overflow: hidden;
             transition: transform 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         .video-card:hover {
             transform: translateY(-4px);
@@ -425,10 +429,14 @@
         .video-thumbnail {
             position: relative;
             width: 100%;
-            aspect-ratio: 16/9;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
             background-color: #334155;
+            overflow: hidden;
         }
         .video-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -491,6 +499,19 @@
             .mobile-menu {
                 display: block;
             }
+
+            .trending-videos {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+            
+            .video-card {
+                max-width: 100%;
+            }
+            
+            .video-thumbnail {
+                padding-top: 56.25%; /* Maintain aspect ratio on mobile */
+            }
         }
 
         /* Mobile Devices */
@@ -505,6 +526,13 @@
             .show-all-btn {
                 align-self: flex-start;
                 margin-top: 0.5rem;
+            }
+            .trending-videos {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-details {
+                padding: 0.75rem;
             }
         }
     </style>
@@ -631,13 +659,13 @@
                     <div class="video-thumbnail">
                         <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
+                    </div                    <div class="video-details">
                         <h3 class="video-title">Loading video...</h3>
                         <p class="video-meta">Channel Name</p>
                         <p class="video-meta">0 views • Just now</p>
                     </div>
-                </div                <div class="video-card">
+                </div>
+                <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
@@ -676,7 +704,8 @@
                     <div class="video-thumbnail">
                         <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
-                    </div                    <div class="video-details">
+                    </div>
+                    <div class="video-details">
                         <h3 class="video-title">Loading video...</h3>
                         <p class="video-meta">Channel Name</p>
                         <p class="video-meta">0 views • Just now</p>
