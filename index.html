@@ -642,8 +642,7 @@
                     <div class="video-thumbnail">
                         <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
-                    </div>
-                    <div class="video-details">
+                    </div                    <div class="video-details">
                         <h3 class="video-title">Loading video...</h3>
                         <p class="video-meta">Channel Name</p>
                         <p class="video-meta">0 views • Just now</p>
@@ -683,16 +682,27 @@
 
         async function fetchAPIKeys() {
             try {
+                console.log('Fetching API keys...');
                 const response = await fetch('/api/youtube');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 
-                if (data.apiKey && data.channelId) {
-                    YOUTUBE_API_KEY = data.apiKey;
-                    YOUTUBE_CHANNEL_ID = data.channelId;
+                if (data.error) {
+                    throw new Error(data.message || 'Failed to fetch API keys');
+                }
+                
+                YOUTUBE_API_KEY = data.apiKey;
+                YOUTUBE_CHANNEL_ID = data.channelId;
+                
+                if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
+                    console.log('API keys received successfully');
                     fetchLatestVideos();
                 } else {
-                    console.error("API Key or Channel ID is missing.");
-                    showPlaceholderContent();
+                    throw new Error('API Key or Channel ID is missing');
                 }
             } catch (error) {
                 console.error("Error fetching API keys:", error);
