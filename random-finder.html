@@ -145,6 +145,50 @@
                 padding: 0.875rem 1.5rem;
             }
         }
+
+        /* Add these styles to your existing CSS */
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            aspect-ratio: 16/9;
+            background: #1e293b;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            animation: videoAppear 0.5s ease;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .app-button-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-button {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .app-button:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        @keyframes videoAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -167,24 +211,141 @@
 
             <div class="random-result">
                 <h2 class="result-title">Your Random Video</h2>
-                <p class="result-desc">Here's a random video we found for you!</p>
+                <div id="video-container" class="video-container"></div>
+                <div id="app-button-container" class="app-button-container" style="display: none;">
+                    <button onclick="openInYouTubeApp()" class="app-button">Open in YouTube App</button>
+                </div>
                 <div class="result-meta">
-                    <span>Category: Gaming</span>
+                    <span id="video-title">Loading...</span>
                     <span>•</span>
-                    <span>Duration: 15:30</span>
+                    <span id="video-date">Loading...</span>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
-        const randomButton = document.querySelector('.random-button');
-        const randomResult = document.querySelector('.random-result');
+        let YOUTUBE_API_KEY = "";
+        let YOUTUBE_CHANNEL_ID = "";
+        let videoIds = [];
+        let currentVideoId = "";
+        let videoData = {};
 
-        randomButton.addEventListener('click', () => {
-            randomResult.classList.add('show');
-            // Here you would typically fetch random video data from your backend
-            // For now, we're just showing the result container
+        async function fetchAPIKeys() {
+            try {
+                const response = await fetch('/api/youtube');
+                const data = await response.json();
+                YOUTUBE_API_KEY = data.apiKey;
+                YOUTUBE_CHANNEL_ID = data.channelId;
+
+                if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
+                    fetchVideos();
+                } else {
+                    console.error("API Key or Channel ID is missing.");
+                }
+            } catch (error) {
+                console.error("Error fetching API keys:", error);
+            }
+        }
+
+        async function fetchVideos() {
+            if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
+                console.error("API Key or Channel ID not loaded yet.");
+                return;
+            }
+
+            try {
+                const channelResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}`
+                );
+                const channelData = await channelResponse.json();
+                const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+
+                const playlistResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${uploadsPlaylistId}&key=${YOUTUBE_API_KEY}`
+                );
+                const playlistData = await playlistResponse.json();
+
+                videoIds = playlistData.items.map(item => item.snippet.resourceId.videoId);
+                videoData = playlistData.items.reduce((acc, item) => {
+                    acc[item.snippet.resourceId.videoId] = item.snippet;
+                    return acc;
+                }, {});
+
+                // Enable the random button once videos are loaded
+                document.querySelector('.random-button').disabled = false;
+            } catch (error) {
+                console.error("Error fetching videos:", error);
+            }
+        }
+
+        function showRandomVideo() {
+            if (videoIds.length === 0) {
+                alert("Videos not loaded yet! Please try again!");
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * videoIds.length);
+            const videoId = videoIds[randomIndex];
+            currentVideoId = videoId;
+
+            const videoContainer = document.getElementById("video-container");
+            videoContainer.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+
+            // Update video title and date
+            const videoInfo = videoData[videoId];
+            document.getElementById("video-title").textContent = videoInfo.title;
+            document.getElementById("video-date").textContent = formatDate(videoInfo.publishedAt);
+
+            // Add animation effect
+            videoContainer.style.animation = "none";
+            videoContainer.offsetHeight; /* trigger reflow */
+            videoContainer.style.animation = "videoAppear 0.5s ease";
+            
+            // Show the result container and app button
+            document.querySelector('.random-result').classList.add('show');
+            document.getElementById("app-button-container").style.display = "block";
+        }
+
+        function openInYouTubeApp() {
+            if (!currentVideoId) return;
+            
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                window.location.href = `youtube://www.youtube.com/watch?v=${currentVideoId}`;
+                setTimeout(() => {
+                    window.location.href = `https://www.youtube.com/watch?v=${currentVideoId}`;
+                }, 1000);
+            } else {
+                window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank');
+            }
+        }
+
+        function formatDate(publishedAt) {
+            const date = new Date(publishedAt);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 7) return `${days} days ago`;
+            if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+            if (days < 365) return `${Math.floor(days / 30)} months ago`;
+            return `${Math.floor(days / 365)} years ago`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAPIKeys();
+            document.querySelector('.random-button').addEventListener('click', showRandomVideo);
         });
     </script>
 </body>
