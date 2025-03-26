@@ -235,21 +235,17 @@
             try {
                 console.log('Fetching API keys...');
                 const response = await fetch('/api/youtube');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const data = await response.json();
                 console.log('API response:', data);
-
-                if (!data.apiKey || !data.channelId) {
-                    throw new Error("API Key or Channel ID is missing in the response.");
-                }
-
                 YOUTUBE_API_KEY = data.apiKey;
                 YOUTUBE_CHANNEL_ID = data.channelId;
 
-                console.log('API keys received, fetching videos...');
-                fetchVideos();
+                if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
+                    console.log('API keys received, fetching videos...');
+                    fetchVideos();
+                } else {
+                    console.error("API Key or Channel ID is missing.");
+                }
             } catch (error) {
                 console.error("Error fetching API keys:", error);
             }
@@ -373,4 +369,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
