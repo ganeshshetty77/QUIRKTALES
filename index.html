@@ -509,10 +509,14 @@
         <section class="hero-slider">
             <div class="carousel">
                 <div class="carousel-item">
-                    <div class="hero-overlay">
-                        <h2 class="hero-title">Featured Video 1</h2>
-                        <p class="hero-meta">Latest release from our channel</p>
-                    </div>
+                    <a href="#" id="latest-video-link" class="hero-overlay">
+                        <div class="video-thumbnail">
+                            <img id="latest-video-thumbnail" src="https://via.placeholder.com/400x225" alt="Latest Video">
+                            <span class="video-duration" id="latest-video-duration">00:00</span>
+                        </div>
+                        <h2 class="hero-title" id="latest-video-title">Loading latest video...</h2>
+                        <p class="hero-meta" id="latest-video-meta">Just uploaded</p>
+                    </a>
                 </div>
                 <div class="carousel-item">
                     <div class="hero-overlay">
@@ -721,14 +725,45 @@
             return `${Math.floor(days / 365)} years ago`;
         }
 
+        // Function to format duration
+        function formatDuration(duration) {
+            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+            const hours = (match[1] || '').replace('H', '');
+            const minutes = (match[2] || '').replace('M', '');
+            const seconds = (match[3] || '').replace('S', '');
+            
+            if (hours) {
+                return `${hours}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+            }
+            return `${minutes}:${seconds.padStart(2, '0')}`;
+        }
+
         // Function to fetch latest videos
         async function fetchLatestVideos() {
             try {
-                const response = await fetch('/api/youtube');
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=1`);
                 const data = await response.json();
-                console.log(data); // Test response
+                
+                if (data.items && data.items.length > 0) {
+                    const video = data.items[0];
+                    const videoId = video.id.videoId;
+                    
+                    // Update latest video in hero section
+                    document.getElementById('latest-video-thumbnail').src = video.snippet.thumbnails.high.url;
+                    document.getElementById('latest-video-title').textContent = video.snippet.title;
+                    document.getElementById('latest-video-meta').textContent = `Uploaded ${formatDate(video.snippet.publishedAt)}`;
+                    document.getElementById('latest-video-link').href = `https://www.youtube.com/watch?v=${videoId}`;
+                    
+                    // Fetch video duration
+                    const durationResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails`);
+                    const durationData = await durationResponse.json();
+                    if (durationData.items && durationData.items.length > 0) {
+                        document.getElementById('latest-video-duration').textContent = formatDuration(durationData.items[0].contentDetails.duration);
+                    }
+                }
             } catch (error) {
                 console.error("Error fetching videos:", error);
+                showPlaceholderContent();
             }
         }
 
@@ -812,8 +847,11 @@
             });
         }
 
-        // Fetch API keys when page loads
-        document.addEventListener('DOMContentLoaded', fetchLatestVideos);
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAPIKeys();
+            initializeCarousel();
+        });
 
         const hamburgerMenu = document.querySelector('.hamburger-menu');
         const mobileMenu = document.querySelector('.mobile-menu');
