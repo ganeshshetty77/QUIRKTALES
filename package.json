@@ -1,12 +1,9 @@
 {
-    "name": "veggiefics",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-      "start": "serve .",
-      "dev": "serve ."
-    },
-    "dependencies": {
-      "serve": "^14.2.1"
-    }
+  "name": "veggiefics",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+      "build": "echo 'No build step needed for static site'",
+      "start": "echo 'No start step needed for static site'"
   }
+}
