@@ -685,10 +685,10 @@
             try {
                 const response = await fetch('/api/youtube');
                 const data = await response.json();
-                YOUTUBE_API_KEY = data.apiKey;
-                YOUTUBE_CHANNEL_ID = data.channelId;
-
-                if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
+                
+                if (data.apiKey && data.channelId) {
+                    YOUTUBE_API_KEY = data.apiKey;
+                    YOUTUBE_CHANNEL_ID = data.channelId;
                     fetchLatestVideos();
                 } else {
                     console.error("API Key or Channel ID is missing.");
