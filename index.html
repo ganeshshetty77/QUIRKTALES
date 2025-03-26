@@ -173,7 +173,7 @@
             border-radius: 0.75rem;
             overflow: hidden;
             background-color: #1e293b;
-            aspect-ratio: 16/8; /* Changed from 16/9 to make it slightly taller */
+            aspect-ratio: 16/7; /* Increased height by changing from 16/8 to 16/7 */
         }
         .carousel {
             display: flex;
@@ -411,12 +411,12 @@
         }
         .trending-videos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
             margin: 0 auto;
         }
         .trending-videos.expanded {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
         .video-card {
             background-color: #1e293b;
@@ -591,8 +591,7 @@
                         <h2 class="hero-title">Featured Video 2</h2>
                         <p class="hero-meta">Most popular this week</p>
                     </div>
-                </div>
-                <div class="carousel-item">
+                </div                <div class="carousel-item">
                     <div class="hero-overlay">
                         <h2 class="hero-title">Featured Video 3</h2>
                         <p class="hero-meta">Editor's choice</p>
