@@ -414,30 +414,29 @@
         }
         .trending-videos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  /* Reduced from 250px to 200px */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
         }
         .trending-videos.expanded {
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         }
         .video-card {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            max-height: 300px;  /* Added max-height */
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
         }
-
         .video-card:hover {
             transform: translateY(-4px);
         }
         .video-thumbnail {
-            flex-shrink: 0; /* Prevent thumbnail from shrinking */
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #334155;
         }
-
         .video-thumbnail img {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -453,10 +452,7 @@
             font-size: 0.75rem;
         }
         .video-details {
-            flex-grow: 1; /* Allow details to expand and fill remaining space */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            padding: 1rem;
         }
         .video-title {
             font-weight: 600;
@@ -593,7 +589,8 @@
                         <h2 class="hero-title">Featured Video 2</h2>
                         <p class="hero-meta">Most popular this week</p>
                     </div>
-                </div                <div class="carousel-item">
+                </div>
+                <div class="carousel-item">
                     <div class="hero-overlay">
                         <h2 class="hero-title">Featured Video 3</h2>
                         <p class="hero-meta">Editor's choice</p>
@@ -652,7 +649,7 @@
             <div class="trending-videos">
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
@@ -663,17 +660,7 @@
                 </div>
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
-                        <span class="video-duration">00:00</span>
-                    </div                    <div class="video-details">
-                        <h3 class="video-title">Loading video...</h3>
-                        <p class="video-meta">Channel Name</p>
-                        <p class="video-meta">0 views • Just now</p>
-                    </div>
-                </div>
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
@@ -684,7 +671,18 @@
                 </div>
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
+                        <span class="video-duration">00:00</span>
+                    </div>
+                    <div class="video-details">
+                        <h3 class="video-title">Loading video...</h3>
+                        <p class="video-meta">Channel Name</p>
+                        <p class="video-meta">0 views • Just now</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
@@ -697,7 +695,7 @@
             <div class="hidden-videos">
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
@@ -708,7 +706,7 @@
                 </div>
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
@@ -719,7 +717,7 @@
                 </div>
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
@@ -730,7 +728,7 @@
                 </div>
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
+                        <img src="https://via.placeholder.com/400x225" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
                     </div>
                     <div class="video-details">
