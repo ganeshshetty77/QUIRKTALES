@@ -233,12 +233,15 @@
 
         async function fetchAPIKeys() {
             try {
+                console.log('Fetching API keys...');
                 const response = await fetch('/api/youtube');
                 const data = await response.json();
+                console.log('API response:', data);
                 YOUTUBE_API_KEY = data.apiKey;
                 YOUTUBE_CHANNEL_ID = data.channelId;
 
                 if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
+                    console.log('API keys received, fetching videos...');
                     fetchVideos();
                 } else {
                     console.error("API Key or Channel ID is missing.");
@@ -255,16 +258,32 @@
             }
 
             try {
+                console.log('Fetching channel data...');
                 const channelResponse = await fetch(
                     `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}`
                 );
                 const channelData = await channelResponse.json();
-                const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+                console.log('Channel data:', channelData);
 
+                if (!channelData.items || channelData.items.length === 0) {
+                    console.error('No channel data found');
+                    return;
+                }
+
+                const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+                console.log('Uploads playlist ID:', uploadsPlaylistId);
+
+                console.log('Fetching playlist items...');
                 const playlistResponse = await fetch(
                     `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${uploadsPlaylistId}&key=${YOUTUBE_API_KEY}`
                 );
                 const playlistData = await playlistResponse.json();
+                console.log('Playlist data:', playlistData);
+
+                if (!playlistData.items || playlistData.items.length === 0) {
+                    console.error('No videos found in playlist');
+                    return;
+                }
 
                 videoIds = playlistData.items.map(item => item.snippet.resourceId.videoId);
                 videoData = playlistData.items.reduce((acc, item) => {
@@ -272,6 +291,7 @@
                     return acc;
                 }, {});
 
+                console.log('Videos loaded:', videoIds.length);
                 // Enable the random button once videos are loaded
                 document.querySelector('.random-button').disabled = false;
             } catch (error) {
