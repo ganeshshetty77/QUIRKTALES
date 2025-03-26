@@ -666,6 +666,16 @@
             </a>
         </section>
 
+        <!-- Search Results Section -->
+        <section id="searchResults" style="display: none;">
+            <div class="trending-header">
+                <h2 class="trending-title">Search Results</h2>
+            </div>
+            <div class="trending-videos" id="searchResultsGrid">
+                <!-- Search results will be dynamically inserted here -->
+            </div>
+        </section>
+
         <!-- Trending Videos -->
         <section>
             <div class="trending-header">
@@ -1015,6 +1025,115 @@
             hiddenVideos.classList.toggle('show');
             trendingVideos.classList.toggle('expanded');
             showAllBtn.textContent = hiddenVideos.classList.contains('show') ? 'Show Less' : 'Show All';
+        });
+
+        // Add these functions after your existing JavaScript code
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        async function searchVideos(query) {
+            try {
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=12`);
+                const data = await response.json();
+                
+                if (data.items && data.items.length > 0) {
+                    const searchResultsSection = document.getElementById('searchResults');
+                    const searchResultsGrid = document.getElementById('searchResultsGrid');
+                    searchResultsGrid.innerHTML = ''; // Clear existing results
+                    
+                    // Show search results section
+                    searchResultsSection.style.display = 'block';
+                    
+                    // Hide trending section while showing search results
+                    document.querySelector('.trending-videos').closest('section').style.display = 'none';
+                    
+                    // Process each video
+                    for (const item of data.items) {
+                        const videoId = item.id.videoId;
+                        
+                        // Fetch additional video details including duration
+                        const detailsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails,statistics`);
+                        const detailsData = await detailsResponse.json();
+                        
+                        const duration = detailsData.items[0]?.contentDetails.duration || 'PT0M0S';
+                        const viewCount = detailsData.items[0]?.statistics.viewCount || '0';
+                        
+                        const videoCard = document.createElement('div');
+                        videoCard.className = 'video-card';
+                        videoCard.innerHTML = `
+                            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" style="text-decoration: none; color: inherit;">
+                                <div class="video-thumbnail">
+                                    <img src="${item.snippet.thumbnails.high.url}" alt="${item.snippet.title}">
+                                    <span class="video-duration">${formatDuration(duration)}</span>
+                                </div>
+                                <div class="video-details">
+                                    <h3 class="video-title">${item.snippet.title}</h3>
+                                    <p class="video-meta">${formatViewCount(viewCount)} views</p>
+                                    <p class="video-meta">Uploaded ${formatDate(item.snippet.publishedAt)}</p>
+                                </div>
+                            </a>
+                        `;
+                        
+                        searchResultsGrid.appendChild(videoCard);
+                    }
+                } else {
+                    showNoResults();
+                }
+            } catch (error) {
+                console.error("Error searching videos:", error);
+                showSearchError();
+            }
+        }
+
+        function showNoResults() {
+            const searchResultsGrid = document.getElementById('searchResultsGrid');
+            searchResultsGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                    <h3>No videos found</h3>
+                    <p>Try different keywords</p>
+                </div>
+            `;
+        }
+
+        function showSearchError() {
+            const searchResultsGrid = document.getElementById('searchResultsGrid');
+            searchResultsGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                    <h3>Error searching videos</h3>
+                    <p>Please try again later</p>
+                </div>
+            `;
+        }
+
+        // Add this to your existing DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            // ... existing code ...
+
+            // Add search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            const debouncedSearch = debounce((query) => {
+                if (query.length >= 3) {
+                    searchVideos(query);
+                } else if (query.length === 0) {
+                    // Reset to original view when search is cleared
+                    document.getElementById('searchResults').style.display = 'none';
+                    document.querySelector('.trending-videos').closest('section').style.display = 'block';
+                }
+            }, 500);
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                debouncedSearch(query);
+            });
         });
     </script>
 </body>
