@@ -183,6 +183,8 @@
         .carousel-item {
             min-width: 100%;
             position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
         }
         .carousel-nav {
             position: absolute;
@@ -245,26 +247,59 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #334155;
+            justify-content: flex-end;
+            background-color: transparent;
             padding: 2rem;
-            text-align: center;
+            text-align: left;
+        }
+        .video-thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .hero-overlay::before {
-            content: "▶️";
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            z-index: 2;
+        }
+        .hero-title, .hero-meta {
+            position: relative;
+            z-index: 3;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         .hero-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: white;
         }
         .hero-meta {
-            color: #cbd5e1;
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+        }
+        .video-duration {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
             font-size: 0.875rem;
+            z-index: 3;
         }
 
         /* Category Buttons - Responsive */
@@ -602,8 +637,7 @@
                         <p class="video-meta">Channel Name</p>
                         <p class="video-meta">0 views • Just now</p>
                     </div>
-                </div>
-                <div class="video-card">
+                </div                <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="https://dummyimage.com/400x225/1e293b/ffffff" alt="Video Thumbnail">
                         <span class="video-duration">00:00</span>
