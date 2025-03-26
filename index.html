@@ -169,13 +169,11 @@
         /* Hero Slider - Responsive */
         .hero-slider {
             position: relative;
-            margin: 2rem 0;
+            margin: 2rem 0;  /* Increased margin */
             border-radius: 0.75rem;
             overflow: hidden;
             background-color: #1e293b;
-            aspect-ratio: 16/9;
-            max-height: 500px;
-            min-height: 300px;
+            height: 400px;  /* Fixed height for larger screens */
         }
         .carousel {
             display: flex;
@@ -250,11 +248,10 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-end;
+            align-items: flex-start;  /* Changed from center to flex-start */
+            justify-content: flex-end; /* Changed to flex-end to align content to bottom */
             padding: 2rem;
-            text-align: left;
-            text-decoration: none !important;
+            text-align: left;  /* Changed from center to left */
         }
         .video-thumbnail {
             position: relative;
@@ -291,11 +288,11 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         .hero-title {
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Reduced from 1.75rem */
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: white;
-            text-decoration: none !important;
+            text-decoration: none;
         }
         .hero-meta {
             color: rgba(255,255,255,0.9);
@@ -518,12 +515,6 @@
             .video-thumbnail {
                 padding-top: 56.25%; /* Maintain aspect ratio on mobile */
             }
-
-            .hero-slider {
-                margin-top: 3rem;
-                aspect-ratio: 16/9;
-                min-height: 250px;
-            }
         }
 
         /* Mobile Devices */
@@ -548,8 +539,7 @@
             }
 
             .hero-slider {
-                margin-top: 2.5rem;
-                min-height: 200px;
+                height: 250px;  /* Even smaller height for very small screens */
             }
         }
     </style>
