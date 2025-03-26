@@ -252,6 +252,7 @@
             justify-content: flex-end; /* Changed to flex-end to align content to bottom */
             padding: 2rem;
             text-align: left;  /* Changed from center to left */
+            text-decoration: none !important;  /* Remove underline */
         }
         .video-thumbnail {
             position: relative;
@@ -265,12 +266,12 @@
         }
 
         .video-thumbnail img {
-            width: 90%;  /* Reduced from 100% to create space around */
-            height: 90%;  /* Reduced from 100% to create space around */
+            width: 90%;
+            height: 90%;
             object-fit: cover;
             object-position: center;
-            border-radius: 0.5rem;  /* Added rounded corners */
-            margin: auto;  /* Center the image */
+            border-radius: 0.5rem;
+            margin: auto;
         }
         .hero-overlay::before {
             content: "";
@@ -292,7 +293,7 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: white;
-            text-decoration: none;
+            text-decoration: none !important;  /* Remove underline */
         }
         .hero-meta {
             color: rgba(255,255,255,0.9);
@@ -509,7 +510,14 @@
             }
             
             .video-thumbnail {
-                padding-top: 56.25%; /* Maintain aspect ratio on mobile */
+                height: 100%;  /* Ensure full height */
+                padding-top: 0;  /* Remove padding-top */
+            }
+
+            .video-thumbnail img {
+                width: 100%;  /* Full width on mobile */
+                height: 100%;  /* Full height on mobile */
+                border-radius: 0;  /* Optional: remove border radius on mobile */
             }
         }
 
@@ -535,8 +543,18 @@
             }
 
             .hero-slider {
-                height: 250px;  /* Even smaller height for very small screens */
+                margin-top: 2.5rem;
+                height: 250px;
             }
+
+            .video-thumbnail {
+                height: 100%;
+            }
+        }
+
+        /* Add this to remove underline from the link */
+        a.hero-overlay {
+            text-decoration: none !important;
         }
     </style>
 </head>
