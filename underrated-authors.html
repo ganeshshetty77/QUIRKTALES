@@ -232,9 +232,9 @@
             }
 
             grid.innerHTML = authors.map(author => `
-                <a href="${author.link}" target="_blank" class="author-card">
+                <a href="${author.Link}" target="_blank" class="author-card">
                     <div class="author-info">
-                        <h3 class="author-name">${author.name}</h3>
+                        <h3 class="author-name">${author.Name}</h3>
                         <span class="visit-profile">Visit Profile →</span>
                     </div>
                 </a>
@@ -268,7 +268,7 @@
 
             const performSearch = debounce((searchTerm) => {
                 const filteredAuthors = allAuthors.filter(author => 
-                    author.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    author.Name.toLowerCase().includes(searchTerm.toLowerCase())
                 );
                 displayAuthors(filteredAuthors);
             }, 300);
