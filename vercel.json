@@ -6,6 +6,7 @@
     ],
     "routes": [
         { "src": "/api/(.*)", "dest": "/pages/api/$1.js" },
+        { "src": "/underrated-authors.html", "dest": "/underrated-authors.html" },
         { "src": "/underrated-authors", "dest": "/underrated-authors.html" },
         { "src": "/(.*)", "dest": "/$1" }
     ],
