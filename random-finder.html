@@ -189,14 +189,6 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .correct-selection {
-            box-shadow: 0 0 10px 2px rgba(0, 255, 0, 0.5); /* Light green glow */
-        }
-
-        .wrong-selection {
-            box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.5); /* Light red glow */
-        }
     </style>
 </head>
 <body>
@@ -337,17 +329,6 @@
                 </iframe>
             `;
 
-            // Example logic to determine if the selection is correct
-            const isCorrect = Math.random() > 0.5; // Replace with actual logic
-
-            if (isCorrect) {
-                videoContainer.classList.add('correct-selection');
-                videoContainer.classList.remove('wrong-selection');
-            } else {
-                videoContainer.classList.add('wrong-selection');
-                videoContainer.classList.remove('correct-selection');
-            }
-
             // Update video title and date
             const videoInfo = videoData[videoId];
             document.getElementById("video-title").textContent = videoInfo.title;
@@ -392,6 +373,7 @@
             return `${Math.floor(days / 365)} years ago`;
         }
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             fetchAPIKeys();
             document.querySelector('.random-button').addEventListener('click', showRandomVideo);
