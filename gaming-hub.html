@@ -124,6 +124,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            outline: none;
+            border: none;
         }
         .video-details {
             padding: 1rem;
@@ -199,6 +201,18 @@
             .game-title {
                 font-size: 1.75rem;
             }
+        }
+
+        /* Correct selection glow */
+        .correct-selection {
+            background-color: rgba(144, 238, 144, 0.7); /* Light green background */
+            transition: background-color 0.5s ease-out; /* Fade out effect */
+        }
+
+        /* Incorrect selection glow */
+        .incorrect-selection {
+            background-color: rgba(255, 99, 71, 0.7); /* Light red background */
+            transition: background-color 0.5s ease-out; /* Fade out effect */
         }
     </style>
 </head>
