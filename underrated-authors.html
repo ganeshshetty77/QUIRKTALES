@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underrated Authors - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 8px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+        .back-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Search Section */
+        .search-section {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .search-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #6366f1;
+        }
+        .search-desc {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem;
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            transition: border-color 0.3s ease;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        /* Authors Grid */
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .author-card {
+            display: flex;
+            flex-direction: column;
+            background-color: #1e293b;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #334155;
+        }
+        .author-card:hover {
+            transform: translateY(-4px);
+            border-color: #6366f1;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+        }
+        .author-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .author-platform {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: #334155;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        .author-description {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .author-links {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        .author-link {
+            padding: 0.5rem 1rem;
+            background-color: #334155;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: background-color 0.3s ease;
+        }
+        .author-link:hover {
+            background-color: #6366f1;
+        }
+        .author-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .author-stats {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+            grid-column: 1/-1;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .search-title {
+                font-size: 1.75rem;
+            }
+            .back-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.875rem;
+                gap: 0.3rem;
+            }
+            .logo {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="container header">
+        <a href="index.html" class="logo">
+            <span>📺</span> VeggieFics
+        </a>
+        <a href="index.html" class="back-btn">
+            <span>←</span> Back to Home
+        </a>
+    </header>
+
+    <main class="container">
+        <section class="search-section">
+            <h1 class="search-title">Discover Underrated Authors</h1>
+            <p class="search-desc">Find amazing hidden talent in the fanfiction community</p>
+            <input type="text" class="search-input" placeholder="Search authors by name or platform..." id="authorSearch">
+        </section>
+
+        <div class="authors-grid" id="authorsGrid">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading authors...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let allAuthors = [];
+
+        async function fetchAuthors() {
+            try {
+                const response = await fetch('/api/authors');
+                if (!response.ok) throw new Error('Failed to fetch authors');
+                const authors = await response.json();
+                allAuthors = authors;
+                displayAuthors(authors);
+            } catch (error) {
+                console.error('Error fetching authors:', error);
+                showError('Failed to load authors');
+            }
+        }
+
+        function displayAuthors(authors) {
+            const grid = document.getElementById('authorsGrid');
+            
+            if (authors.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <h3>No authors found</h3>
+                        <p>Try different search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = authors.map(author => `
+                <div class="author-card">
+                    <div class="author-info">
+                        <span class="author-platform">${author.platform}</span>
+                        <h3 class="author-name">${author.name}</h3>
+                        <p class="author-description">${author.description || 'No description available'}</p>
+                        <div class="author-stats">
+                            ${author.story_count ? `${author.story_count} Stories • ` : ''}
+                            ${author.total_views ? `${formatNumber(author.total_views)} Views` : ''}
+                        </div>
+                        <div class="author-links">
+                            ${author.profile_url ? `
+                                <a href="${author.profile_url}" target="_blank" class="author-link">View Profile</a>
+                            ` : ''}
+                            ${author.website ? `
+                                <a href="${author.website}" target="_blank" class="author-link">Website</a>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatNumber(num) {
+            if (!num) return '0';
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        function showError(message) {
+            const grid = document.getElementById('authorsGrid');
+            grid.innerHTML = `
+                <div class="no-results">
+                    <h3>Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('authorSearch');
+            
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            const performSearch = debounce((searchTerm) => {
+                const filteredAuthors = allAuthors.filter(author => 
+                    author.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    author.platform.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (author.description && author.description.toLowerCase().includes(searchTerm.toLowerCase()))
+                );
+                displayAuthors(filteredAuthors);
+            }, 300);
+
+            searchInput.addEventListener('input', (e) => {
+                performSearch(e.target.value);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAuthors();
+            setupSearch();
+        });
+    </script>
+</body>
+</html> 
