@@ -706,7 +706,6 @@
             </div>
         </section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/aiotube-client@latest/dist/aiotube.min.js"></script>
     <script>
         // YouTube API configuration
         let YOUTUBE_API_KEY = "";
@@ -932,7 +931,9 @@
 
         // Initialize everything when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            fetchTrendingVideos();
+            fetchAPIKeys().then(() => {
+                fetchTrendingVideos();
+            });
             initializeCarousel();
 
             // Wrap the search input in a form
@@ -1088,32 +1089,40 @@
         // Add these functions after your existing JavaScript code
         async function fetchTrendingVideos() {
             try {
-                const channel = new AioTube.Channel('@cabbageheadfanfics'); // Replace with your channel handle
+                // Fetch up to 50 videos from the channel
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&order=date&maxResults=50&type=video`);
+                const data = await response.json();
                 
-                // Get all video IDs
-                const videoIds = await channel.uploads();
-                const videos = [];
-                
-                // Fetch details for each video
-                for (const videoId of videoIds) {
-                    const video = new AioTube.Video(videoId);
-                    const metadata = await video.metadata;
-                    videos.push(metadata);
-                }
-                
-                // Sort by views and likes
-                const mostViewed = [...videos]
-                    .sort((a, b) => parseInt(b.viewCount) - parseInt(a.viewCount))
-                    .slice(0, 2);
+                if (data.items && data.items.length > 0) {
+                    const videoIds = data.items.map(item => item.id.videoId).join(',');
                     
-                const mostLiked = [...videos]
-                    .sort((a, b) => parseInt(b.likeCount) - parseInt(a.likeCount))
-                    .slice(0, 2);
-                
-                // Display videos
-                await displayTrendingVideos(mostViewed, 'mostViewedVideos');
-                await displayTrendingVideos(mostLiked, 'mostLikedVideos');
-                
+                    // Fetch detailed statistics for all videos
+                    const statsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=statistics,contentDetails`);
+                    const statsData = await statsResponse.json();
+                    
+                    // Combine video data with statistics
+                    const videosWithStats = data.items.map(item => {
+                        const stats = statsData.items.find(stat => stat.id === item.id.videoId);
+                        return {
+                            ...item,
+                            statistics: stats.statistics,
+                            contentDetails: stats.contentDetails
+                        };
+                    });
+                    
+                    // Sort by views and likes
+                    const mostViewed = [...videosWithStats].sort((a, b) => 
+                        parseInt(b.statistics.viewCount) - parseInt(a.statistics.viewCount)
+                    ).slice(0, 2);
+                    
+                    const mostLiked = [...videosWithStats].sort((a, b) => 
+                        parseInt(b.statistics.likeCount) - parseInt(a.statistics.likeCount)
+                    ).slice(0, 2);
+                    
+                    // Display videos
+                    await displayTrendingVideos(mostViewed, 'mostViewedVideos');
+                    await displayTrendingVideos(mostLiked, 'mostLikedVideos');
+                }
             } catch (error) {
                 console.error("Error fetching trending videos:", error);
                 showTrendingError();
@@ -1122,28 +1131,23 @@
 
         async function displayTrendingVideos(videos, containerId) {
             const container = document.getElementById(containerId);
-            container.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-                    <h3>Loading videos...</h3>
-                    <p>This might take a moment</p>
-                </div>
-            `;
+            container.innerHTML = '';
             
             for (const video of videos) {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
                 videoCard.innerHTML = `
-                    <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" style="text-decoration: none; color: inherit;">
+                    <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" style="text-decoration: none; color: inherit;">
                         <div class="video-thumbnail">
-                            <img src="${video.thumbnail}" alt="${video.title}">
-                            <span class="video-duration">${formatDuration(video.duration)}</span>
+                            <img src="${video.snippet.thumbnails.high.url}" alt="${video.snippet.title}">
+                            <span class="video-duration">${formatDuration(video.contentDetails.duration)}</span>
                         </div>
                         <div class="video-details">
-                            <h3 class="video-title">${video.title}</h3>
-                            <p class="video-meta">${formatViewCount(video.viewCount)} views</p>
+                            <h3 class="video-title">${video.snippet.title}</h3>
+                            <p class="video-meta">${formatViewCount(video.statistics.viewCount)} views</p>
                             <p class="video-meta">
-                                ${formatViewCount(video.likeCount)} likes • 
-                                Uploaded ${formatDate(video.uploadDate)}
+                                ${formatViewCount(video.statistics.likeCount)} likes • 
+                                Uploaded ${formatDate(video.snippet.publishedAt)}
                             </p>
                         </div>
                     </a>
