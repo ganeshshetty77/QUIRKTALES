@@ -6,27 +6,19 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  console.log('API Route hit:', req.method, req.url); // Debug logging
-
   if (req.method === 'GET') {
     try {
       const { data, error } = await supabase
-        .from('Author Data')
-        .select('id, Name, Link')
-        .order('Name');
+        .from('Author Data')    // Exact table name
+        .select('id, Name, Link')  // Exact column names
+        .order('Name');         // Order by the exact column name
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log('Fetched authors:', data);
       return res.status(200).json(data);
     } catch (error) {
       console.error('Error:', error);
       return res.status(500).json({ error: 'Failed to fetch authors' });
     }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
   }
-}
+} 
