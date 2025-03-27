@@ -10,8 +10,8 @@ export default async function handler(req, res) {
     try {
       const { data, error } = await supabase
         .from('Author Data')
-        .select('id, name, link')
-        .order('name');
+        .select('id, Name, Link')
+        .order('Name');
 
       if (error) throw error;
 
