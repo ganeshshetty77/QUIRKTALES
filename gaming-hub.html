@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Hub - VeggieFIcs</title>
+    <title>Gaming Hub - VeggieFics</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -239,7 +239,7 @@
         <section class="game-container">
             <h1 class="game-title">View Count Battle</h1>
             <p class="game-desc">Can you guess which video has more views? Click on the video you think has more views!</p>
-            
+
             <div class="score-display">
                 Current Score: <span id="score">0</span>
             </div>
@@ -267,7 +267,7 @@
                 const data = await response.json();
                 YOUTUBE_API_KEY = data.apiKey;
                 YOUTUBE_CHANNEL_ID = data.channelId;
-                
+
                 if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
                     startNewRound();
                 } else {
@@ -293,7 +293,7 @@
                 // Fetch up to 50 videos from the channel
                 const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=50`);
                 const data = await response.json();
-                
+
                 if (data.items && data.items.length > 0) {
                     // Filter valid videos and shuffle them
                     const validVideos = data.items
@@ -302,12 +302,12 @@
 
                     // Get two random videos
                     const selectedVideos = validVideos.slice(0, 2);
-                    
+
                     // Fetch additional details (including view counts) for selected videos
                     const detailedVideos = await Promise.all(selectedVideos.map(async video => {
                         const statsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${video.id.videoId}&part=statistics,snippet`);
                         const statsData = await statsResponse.json();
-                        
+
                         if (statsData.items && statsData.items.length > 0) {
                             return {
                                 thumbnail: video.snippet.thumbnails.high.url,
@@ -330,9 +330,8 @@
 
         function createVideoCard(video, index) {
             const publishDate = new Date(video.publishedAt);
-            const timeAgo = new Intl.RelativeTimeFormat('en').format(
-                Math.ceil((publishDate - new Date()) / (1000 * 60 * 60 * 24)), 'day'
-            );
+            const daysAgo = Math.floor((new Date() - publishDate) / (1000 * 60 * 60 * 24));
+            const timeAgo = new Intl.RelativeTimeFormat('en').format(-daysAgo, 'day');
 
             return `
                 <div class="video-card" onclick="makeGuess(${index})">
@@ -352,7 +351,7 @@
             const resultMessage = document.getElementById('resultMessage');
             resultMessage.textContent = correct ? 'Correct! +1 Point' : 'Wrong! Click Next Round to try again';
             resultMessage.className = `result-message show ${correct ? 'correct' : 'wrong'}`;
-            
+
             document.querySelectorAll('.video-card').forEach(card => {
                 card.classList.add('revealed', 'disabled');
             });
@@ -382,13 +381,13 @@
                 document.getElementById('score').textContent = score;
                 shouldResetScore = false;
             }
-            
+
             const videos = await fetchRandomVideos();
             if (videos.length >= 2) {
                 currentVideos = videos;
                 const videosContainer = document.getElementById('videosContainer');
                 videosContainer.innerHTML = currentVideos.map(createVideoCard).join('');
-                
+
                 document.getElementById('resultMessage').className = 'result-message';
                 document.getElementById('nextRoundBtn').classList.remove('show');
             } else {
@@ -412,4 +411,4 @@
         fetchAPIKeys();
     </script>
 </body>
-</html> 
+</html>

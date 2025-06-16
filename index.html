@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VeggieFIcs</title>
+    <title>VeggieFics</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -483,13 +483,13 @@
             .header {
                 flex-wrap: wrap;
             }
-            
+
             .search-bar {
                 order: 3;
                 width: 100%;
                 margin: 1rem 0;
             }
-            
+
             .header-actions {
                 display: none;
             }
@@ -505,11 +505,11 @@
             .trending-videos {
                 grid-template-columns: 1fr; /* 1 video per row on small screens */
             }
-            
+
             .video-card {
                 max-width: 100%;
             }
-            
+
             .video-thumbnail {
                 height: 100%;  /* Ensure full height */
                 padding-top: 0;  /* Remove padding-top */
@@ -538,7 +538,7 @@
             .trending-videos {
                 grid-template-columns: 1fr;
             }
-            
+
             .video-details {
                 padding: 0.75rem;
             }
@@ -737,20 +737,20 @@
             try {
                 console.log('Fetching API keys...');
                 const response = await fetch('/api/youtube');
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+
                 if (data.error) {
                     throw new Error(data.message || 'Failed to fetch API keys');
                 }
-                
+
                 YOUTUBE_API_KEY = data.apiKey;
                 YOUTUBE_CHANNEL_ID = data.channelId;
-                
+
                 if (YOUTUBE_API_KEY && YOUTUBE_CHANNEL_ID) {
                     console.log('API keys received successfully');
                     await fetchLatestVideos();
@@ -780,7 +780,7 @@
             const now = new Date();
             const diff = now - date;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            
+
             if (days === 0) return 'Today';
             if (days === 1) return 'Yesterday';
             if (days < 7) return `${days} days ago`;
@@ -795,7 +795,7 @@
             const hours = (match[1] || '').replace('H', '');
             const minutes = (match[2] || '').replace('M', '');
             const seconds = (match[3] || '').replace('S', '');
-            
+
             if (hours) {
                 return `${hours}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
             }
@@ -807,17 +807,17 @@
             try {
                 const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=1`);
                 const data = await response.json();
-                
+
                 if (data.items && data.items.length > 0) {
                     const video = data.items[0];
                     const videoId = video.id.videoId;
-                    
+
                     // Update latest video in hero section
                     document.getElementById('latest-video-thumbnail').src = video.snippet.thumbnails.high.url;
                     document.getElementById('latest-video-title').textContent = video.snippet.title;
                     document.getElementById('latest-video-meta').textContent = `Uploaded ${formatDate(video.snippet.publishedAt)}`;
                     document.getElementById('latest-video-link').href = `https://www.youtube.com/watch?v=${videoId}`;
-                    
+
                     // Fetch video duration
                     const durationResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails`);
                     const durationData = await durationResponse.json();
@@ -837,25 +837,25 @@
                 // Fetch up to 50 videos from the channel
                 const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=50`);
                 const data = await response.json();
-                
+
                 if (data.items && data.items.length > 0) {
                     // Get two random videos
                     const shuffledVideos = data.items
                         .filter(item => item.id.videoId) // Ensure we only get videos
                         .sort(() => 0.5 - Math.random()); // Shuffle array
-                    
+
                     // Update random videos in carousel
                     for (let i = 0; i < 2 && i < shuffledVideos.length; i++) {
                         const video = shuffledVideos[i];
                         const videoId = video.id.videoId;
                         const index = i + 1;
-                        
+
                         // Update thumbnail and details
                         document.getElementById(`random-video-thumbnail-${index}`).src = video.snippet.thumbnails.high.url;
                         document.getElementById(`random-video-title-${index}`).textContent = video.snippet.title;
                         document.getElementById(`random-video-meta-${index}`).textContent = `Uploaded ${formatDate(video.snippet.publishedAt)}`;
                         document.getElementById(`random-video-link-${index}`).href = `https://www.youtube.com/watch?v=${videoId}`;
-                        
+
                         // Fetch and update video duration
                         const durationResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails`);
                         const durationData = await durationResponse.json();
@@ -1017,29 +1017,29 @@
             try {
                 const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=12`);
                 const data = await response.json();
-                
+
                 if (data.items && data.items.length > 0) {
                     const searchResultsSection = document.getElementById('searchResults');
                     const searchResultsGrid = document.getElementById('searchResultsGrid');
                     searchResultsGrid.innerHTML = ''; // Clear existing results
-                    
+
                     // Show search results section
                     searchResultsSection.style.display = 'block';
-                    
+
                     // Hide trending section while showing search results
                     document.querySelector('.trending-videos').closest('section').style.display = 'none';
-                    
+
                     // Process each video
                     for (const item of data.items) {
                         const videoId = item.id.videoId;
-                        
+
                         // Fetch additional video details including duration
                         const detailsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails,statistics`);
                         const detailsData = await detailsResponse.json();
-                        
+
                         const duration = detailsData.items[0]?.contentDetails.duration || 'PT0M0S';
                         const viewCount = detailsData.items[0]?.statistics.viewCount || '0';
-                        
+
                         const videoCard = document.createElement('div');
                         videoCard.className = 'video-card';
                         videoCard.innerHTML = `
@@ -1055,7 +1055,7 @@
                                 </div>
                             </a>
                         `;
-                        
+
                         searchResultsGrid.appendChild(videoCard);
                     }
                 } else {
@@ -1096,13 +1096,13 @@
 
             // Remove special characters but keep spaces and alphanumeric characters
             sanitized = sanitized.replace(/[^\w\s-]/g, '');
-            
+
             // Normalize whitespace
             sanitized = sanitized.trim().replace(/\s+/g, ' ');
-            
+
             // Limit length
             sanitized = sanitized.slice(0, 100);
-            
+
             return sanitized;
         }
 
@@ -1112,14 +1112,14 @@
                 // Fetch up to 50 videos from the channel
                 const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&order=date&maxResults=50&type=video`);
                 const data = await response.json();
-                
+
                 if (data.items && data.items.length > 0) {
                     const videoIds = data.items.map(item => item.id.videoId).join(',');
-                    
+
                     // Fetch detailed statistics for all videos
                     const statsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=statistics,contentDetails`);
                     const statsData = await statsResponse.json();
-                    
+
                     // Combine video data with statistics
                     const videosWithStats = data.items.map(item => {
                         const stats = statsData.items.find(stat => stat.id === item.id.videoId);
@@ -1129,16 +1129,16 @@
                             contentDetails: stats.contentDetails
                         };
                     });
-                    
+
                     // Sort by views and likes
-                    const mostViewed = [...videosWithStats].sort((a, b) => 
+                    const mostViewed = [...videosWithStats].sort((a, b) =>
                         parseInt(b.statistics.viewCount) - parseInt(a.statistics.viewCount)
                     ).slice(0, 2);
-                    
-                    const mostLiked = [...videosWithStats].sort((a, b) => 
+
+                    const mostLiked = [...videosWithStats].sort((a, b) =>
                         parseInt(b.statistics.likeCount) - parseInt(a.statistics.likeCount)
                     ).slice(0, 2);
-                    
+
                     // Display videos
                     await displayTrendingVideos(mostViewed, 'mostViewedVideos');
                     await displayTrendingVideos(mostLiked, 'mostLikedVideos');
@@ -1152,7 +1152,7 @@
         async function displayTrendingVideos(videos, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            
+
             for (const video of videos) {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
@@ -1166,13 +1166,13 @@
                             <h3 class="video-title">${video.snippet.title}</h3>
                             <p class="video-meta">${formatViewCount(video.statistics.viewCount)} views</p>
                             <p class="video-meta">
-                                ${formatViewCount(video.statistics.likeCount)} likes • 
+                                ${formatViewCount(video.statistics.likeCount)} likes •
                                 Uploaded ${formatDate(video.snippet.publishedAt)}
                             </p>
                         </div>
                     </a>
                 `;
-                
+
                 container.appendChild(videoCard);
             }
         }
