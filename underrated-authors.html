@@ -220,7 +220,7 @@
 
         function displayAuthors(authors) {
             const grid = document.getElementById('authorsGrid');
-            
+
             if (authors.length === 0) {
                 grid.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
@@ -253,7 +253,7 @@
 
         function setupSearch() {
             const searchInput = document.getElementById('authorSearch');
-            
+
             function debounce(func, wait) {
                 let timeout;
                 return function executedFunction(...args) {
@@ -267,7 +267,7 @@
             }
 
             const performSearch = debounce((searchTerm) => {
-                const filteredAuthors = allAuthors.filter(author => 
+                const filteredAuthors = allAuthors.filter(author =>
                     author.Name.toLowerCase().includes(searchTerm.toLowerCase())
                 );
                 displayAuthors(filteredAuthors);
@@ -284,4 +284,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

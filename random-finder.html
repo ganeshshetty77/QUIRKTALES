@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Finder - VeggieFIcs</title>
+    <title>Random Finder - VeggieFics</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -214,7 +214,7 @@
         <section class="random-finder">
             <h1 class="random-finder-title">Random Video Finder</h1>
             <p class="random-finder-desc">Discover random videos from our collection. Click the button below to find something new!</p>
-            
+
             <button class="random-button">Find Random Video</button>
 
             <div class="random-result">
@@ -330,9 +330,9 @@
 
             const videoContainer = document.getElementById("video-container");
             videoContainer.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                <iframe
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
                 </iframe>
             `;
@@ -346,7 +346,7 @@
             videoContainer.style.animation = "none";
             videoContainer.offsetHeight; /* trigger reflow */
             videoContainer.style.animation = "videoAppear 0.5s ease";
-            
+
             // Show the result container and app button
             document.querySelector('.random-result').classList.add('show');
             document.getElementById("app-button-container").style.display = "block";
@@ -354,9 +354,9 @@
 
         function openInYouTubeApp() {
             if (!currentVideoId) return;
-            
+
             const isAndroid = /Android/i.test(navigator.userAgent);
-            
+
             if (isAndroid) {
                 window.location.href = `youtube://www.youtube.com/watch?v=${currentVideoId}`;
                 setTimeout(() => {
@@ -372,7 +372,7 @@
             const now = new Date();
             const diff = now - date;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            
+
             if (days === 0) return 'Today';
             if (days === 1) return 'Yesterday';
             if (days < 7) return `${days} days ago`;

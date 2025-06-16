@@ -231,13 +231,13 @@
 
             // Remove special characters but keep spaces and alphanumeric characters
             sanitized = sanitized.replace(/[^\w\s-]/g, '');
-            
+
             // Normalize whitespace
             sanitized = sanitized.trim().replace(/\s+/g, ' ');
-            
+
             // Limit length
             sanitized = sanitized.slice(0, 100);
-            
+
             return sanitized;
         }
 
@@ -247,7 +247,7 @@
                 const data = await response.json();
                 YOUTUBE_API_KEY = data.apiKey;
                 YOUTUBE_CHANNEL_ID = data.channelId;
-                
+
                 // Get and sanitize search query from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const rawQuery = urlParams.get('q');
@@ -282,7 +282,7 @@
             const now = new Date();
             const diff = now - date;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            
+
             if (days === 0) return 'Today';
             if (days === 1) return 'Yesterday';
             if (days < 7) return `${days} days ago`;
@@ -296,7 +296,7 @@
             const hours = (match[1] || '').replace('H', '');
             const minutes = (match[2] || '').replace('M', '');
             const seconds = (match[3] || '').replace('S', '');
-            
+
             if (hours) {
                 return `${hours}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
             }
@@ -313,21 +313,21 @@
 
                 const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet&q=${encodeURIComponent(sanitizedQuery)}&type=video&maxResults=12`);
                 const data = await response.json();
-                
+
                 const resultsContainer = document.getElementById('searchResults');
                 resultsContainer.innerHTML = '';
-                
+
                 if (data.items && data.items.length > 0) {
                     for (const item of data.items) {
                         const videoId = item.id.videoId;
-                        
+
                         // Fetch additional video details
                         const detailsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=contentDetails,statistics`);
                         const detailsData = await detailsResponse.json();
-                        
+
                         const duration = detailsData.items[0]?.contentDetails.duration || 'PT0M0S';
                         const viewCount = detailsData.items[0]?.statistics.viewCount || '0';
-                        
+
                         const videoElement = document.createElement('div');
                         videoElement.className = 'video-item';
                         videoElement.innerHTML = `
@@ -347,7 +347,7 @@
                                 </div>
                             </div>
                         `;
-                        
+
                         resultsContainer.appendChild(videoElement);
                     }
                 } else {
@@ -381,7 +381,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchAPIKeys();
-            
+
             const searchForm = document.getElementById('searchForm');
             searchForm.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -393,7 +393,7 @@
                         const url = new URL(window.location);
                         url.searchParams.set('q', sanitizedQuery);
                         window.history.pushState({}, '', url);
-                        
+
                         document.getElementById('queryText').textContent = sanitizedQuery;
                         searchVideos(sanitizedQuery);
                     } else {
@@ -404,4 +404,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
