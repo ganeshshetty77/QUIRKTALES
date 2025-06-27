@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanfic - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background:#0f172a; color:white; line-height:1.6; }
+        .container { max-width: 768px; margin:0 auto; padding:1rem; }
+        .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+        .back-btn { background:#6366f1; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; text-decoration:none; }
+        .chapter-nav { margin-top:1rem; display:flex; justify-content:space-between; }
+        .loading { color:#94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="fanfics.html" class="back-btn">← Back to Library</a>
+            <h1 id="ficTitle"></h1>
+        </div>
+        <p id="ficSummary"></p>
+        <div id="chapterContainer">
+            <p class="loading" id="loading" style="display:none;">Loading...</p>
+            <h2 id="chapterTitle"></h2>
+            <p id="chapterContent"></p>
+        </div>
+        <div class="chapter-nav">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+<script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    let current = 1;
+    let total = 1;
+
+    async function loadMeta() {
+        try {
+            const resp = await fetch(`fanfics/${id}/meta.json`);
+            const meta = await resp.json();
+            document.getElementById('ficTitle').textContent = meta.title;
+            document.getElementById('ficSummary').textContent = meta.summary;
+            total = meta.chapters;
+            loadChapter(1);
+        } catch (e) {
+            document.getElementById('chapterContent').textContent = 'Failed to load fanfic.';
+        }
+    }
+
+    async function loadChapter(num) {
+        if (num < 1 || num > total) return;
+        current = num;
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('chapterTitle').textContent = '';
+        document.getElementById('chapterContent').textContent = '';
+        try {
+            const resp = await fetch(`fanfics/${id}/${num}.json`);
+            const data = await resp.json();
+            document.getElementById('chapterTitle').textContent = `Chapter ${data.number}`;
+            document.getElementById('chapterContent').textContent = data.content;
+        } catch (e) {
+            document.getElementById('chapterContent').textContent = 'Failed to load chapter.';
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+            updateButtons();
+        }
+    }
+
+    function updateButtons() {
+        document.getElementById('prevBtn').disabled = current <= 1;
+        document.getElementById('nextBtn').disabled = current >= total;
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => loadChapter(current - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => loadChapter(current + 1));
+
+    loadMeta();
+</script>
+</body>
+</html>
