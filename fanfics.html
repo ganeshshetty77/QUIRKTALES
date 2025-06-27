@@ -124,19 +124,14 @@
         <p id="fanficsMessage" style="display:none;color:#94a3b8;margin-top:1rem;"></p>
     </main>
 
+    <script src="fanfics/fanfics.js"></script>
     <script>
         async function loadFanfics() {
             const messageEl = document.getElementById('fanficsMessage');
             const list = document.getElementById('fanficsList');
             try {
-                // Fetch fanfics from the static JSON file. Relative path keeps
-                // the request working even if the site is served from a
-                // subdirectory.
-                // Use a simple relative path so the file loads correctly
-                // whether the site is hosted at the root or a subdirectory.
-                const response = await fetch('fanfics/fanfics.json');
-                if (!response.ok) throw new Error('Network error');
-                const data = await response.json();
+                // Load fanfics from a JS file to avoid fetch issues on some hosts
+                const data = window.FANFICS || [];
                 if (data.length === 0) {
                     messageEl.textContent = 'No fanfics available yet.';
                     messageEl.style.display = 'block';
