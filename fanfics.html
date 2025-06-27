@@ -132,8 +132,9 @@
                 // Fetch fanfics from the static JSON file. Relative path keeps
                 // the request working even if the site is served from a
                 // subdirectory.
-                const jsonUrl = new URL('fanfics/fanfics.json', window.location.href);
-                const response = await fetch(jsonUrl);
+                // Use a simple relative path so the file loads correctly
+                // whether the site is hosted at the root or a subdirectory.
+                const response = await fetch('fanfics/fanfics.json');
                 if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
                 if (data.length === 0) {
