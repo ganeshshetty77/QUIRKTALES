@@ -121,14 +121,22 @@
         <section class="fanfics-list" id="fanficsList">
             <!-- Fanfics will be loaded here -->
         </section>
+        <p id="fanficsMessage" style="display:none;color:#94a3b8;margin-top:1rem;"></p>
     </main>
 
     <script>
         async function loadFanfics() {
+            const messageEl = document.getElementById('fanficsMessage');
+            const list = document.getElementById('fanficsList');
             try {
-                const response = await fetch('fanfics/fanfics.json');
+                const response = await fetch('./fanfics/fanfics.json');
+                if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
-                const list = document.getElementById('fanficsList');
+                if (data.length === 0) {
+                    messageEl.textContent = 'No fanfics available yet.';
+                    messageEl.style.display = 'block';
+                    return;
+                }
                 data.forEach(fic => {
                     const ficEl = document.createElement('div');
                     ficEl.className = 'fic';
@@ -182,6 +190,8 @@
                 });
             } catch (err) {
                 console.error('Failed to load fanfics', err);
+                messageEl.textContent = 'Failed to load fanfics.';
+                messageEl.style.display = 'block';
             }
         }
 
