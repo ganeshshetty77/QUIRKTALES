@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanfic Library - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+        .back-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            background-color: #4f46e5;
+        }
+        .fanfic-item {
+            background-color: #1e293b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .fanfic-title {
+            margin-bottom: 0.5rem;
+        }
+        .fanfic-summary {
+            margin: 0.5rem 0;
+            display: none;
+        }
+        .fanfic-actions {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="container header">
+        <a href="index.html" class="logo">
+            <span>📺</span> VeggieFics
+        </a>
+        <a href="index.html" class="back-btn"><span>←</span> Back to Home</a>
+    </header>
+    <main class="container">
+        <h1>Fanfic Library</h1>
+        <div id="fanficList"></div>
+    </main>
+    <script>
+        async function loadLibrary() {
+            const response = await fetch('fanfics.json');
+            const fanfics = await response.json();
+            const list = document.getElementById('fanficList');
+            fanfics.forEach((fic) => {
+                const item = document.createElement('div');
+                item.className = 'fanfic-item';
+                item.innerHTML = `
+                    <h2 class="fanfic-title">${fic.title}</h2>
+                    <button class="toggle-summary">Show Summary</button>
+                    <p class="fanfic-summary">${fic.summary}</p>
+                    <div class="fanfic-actions">
+                        <button class="read-btn" data-id="${fic.id}">Read Fanfic</button>
+                    </div>
+                `;
+                item.querySelector('.toggle-summary').addEventListener('click', (e) => {
+                    const summary = item.querySelector('.fanfic-summary');
+                    if (summary.style.display === 'none') {
+                        summary.style.display = 'block';
+                        e.target.textContent = 'Hide Summary';
+                    } else {
+                        summary.style.display = 'none';
+                        e.target.textContent = 'Show Summary';
+                    }
+                });
+                item.querySelector('.read-btn').addEventListener('click', () => {
+                    window.location.href = `fanfic_reader.html?id=${fic.id}`;
+                });
+                list.appendChild(item);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', loadLibrary);
+    </script>
+</body>
+</html>

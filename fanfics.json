@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "title": "The Vegetable War",
+    "summary": "Carrot and Broccoli battle in the garden.",
+    "chapters": [
+      "Chapter 1: The sun rose over the garden...",
+      "Chapter 2: Tensions grow between the vegetables...",
+      "Chapter 3: Peace returns as the vegetables learn to coexist."
+    ]
+  },
+  {
+    "id": 1,
+    "title": "Cabbage Hero",
+    "summary": "A heroic cabbage saves the day.",
+    "chapters": [
+      "Chapter 1: A humble beginning for the cabbage hero.",
+      "Chapter 2: The villainous rabbit appears.",
+      "Chapter 3: Triumph of the cabbage hero."
+    ]
+  }
+]

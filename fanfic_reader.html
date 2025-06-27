@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanfic Reader - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+        .back-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            background-color: #4f46e5;
+        }
+        #chapterContent {
+            white-space: pre-wrap;
+            margin-bottom: 1rem;
+        }
+        .nav-buttons button {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .nav-buttons button:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <header class="container header">
+        <a href="fanfics.html" class="logo">
+            <span>📺</span> VeggieFics
+        </a>
+        <a href="fanfics.html" class="back-btn"><span>←</span> Back to Library</a>
+    </header>
+    <main class="container">
+        <h1 id="fanficTitle"></h1>
+        <div id="chapterContent"></div>
+        <div class="nav-buttons">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+            <button id="lastBtn">Last</button>
+        </div>
+    </main>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = parseInt(params.get('id'), 10) || 0;
+        let chapters = [];
+        let current = 0;
+
+        async function loadFanfic() {
+            const response = await fetch('fanfics.json');
+            const fanfics = await response.json();
+            const fic = fanfics.find(f => f.id === id);
+            if (!fic) return;
+            document.getElementById('fanficTitle').textContent = fic.title;
+            chapters = fic.chapters;
+            renderChapter();
+        }
+
+        function renderChapter() {
+            document.getElementById('chapterContent').textContent = chapters[current];
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (current > 0) {
+                current--;
+                renderChapter();
+            }
+        });
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (current < chapters.length - 1) {
+                current++;
+                renderChapter();
+            }
+        });
+        document.getElementById('lastBtn').addEventListener('click', () => {
+            current = chapters.length - 1;
+            renderChapter();
+        });
+
+        document.addEventListener('DOMContentLoaded', loadFanfic);
+    </script>
+</body>
+</html>

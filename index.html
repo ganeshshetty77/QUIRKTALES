@@ -46,21 +46,6 @@
             gap: 0.5rem;
         }
 
-        .search-bar {
-            flex-grow: 1;
-            max-width: 600px;
-            margin: 0 1rem;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            background-color: #334155;
-            border: none;
-            border-radius: 0.5rem;
-            color: white;
-            font-size: 1rem;
-        }
-
         .header-actions {
             display: flex;
             align-items: center;
@@ -452,11 +437,6 @@
                 flex-wrap: wrap;
             }
 
-            .search-bar {
-                order: 3;
-                width: 100%;
-                margin: 1rem 0;
-            }
 
             .header-actions {
                 display: none;
@@ -554,9 +534,6 @@
         <div class="logo">
             <span>📺</span> VeggieFics
         </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Search videos...">
-        </div>
         <div class="header-actions">
             <a href="https://www.youtube.com/@cabbageheadfanfics" target="_blank" class="upload-btn">Subscribe</a>
             <div class="notification-icon">🔔</div>
@@ -643,6 +620,11 @@
                 <div class="quick-access-icon">📚</div>
                 <h3 class="quick-access-title">Suggest Fics</h3>
                 <p class="quick-access-desc">Suggest fics for us to cover</p>
+            </a>
+            <a href="fanfics.html" class="quick-access-block">
+                <div class="quick-access-icon">📖</div>
+                <h3 class="quick-access-title">Fanfic Library</h3>
+                <p class="quick-access-desc">Browse available fanfics</p>
             </a>
         </section>
 
@@ -887,26 +869,6 @@
             });
             initializeCarousel();
 
-            // Wrap the search input in a form
-            const searchInput = document.querySelector('.search-bar input');
-            const searchForm = document.createElement('form');
-            searchForm.id = 'searchForm';
-            searchInput.parentNode.insertBefore(searchForm, searchInput);
-            searchForm.appendChild(searchInput);
-
-            // Add form submit handler
-            searchForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const rawQuery = searchInput.value.trim();
-                if (rawQuery.length >= 3) {
-                    const sanitizedQuery = sanitizeSearchQuery(rawQuery);
-                    if (sanitizedQuery) {
-                        window.location.href = `search.html?q=${encodeURIComponent(sanitizedQuery)}`;
-                    } else {
-                        alert('Please enter a valid search term');
-                    }
-                }
-            });
         });
 
         const hamburgerMenu = document.querySelector('.hamburger-menu');
