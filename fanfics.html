@@ -98,7 +98,9 @@
         .read-btn:hover {
             background-color: #4f46e5;
         }
-    </style>
+</style>
+    <!-- 1️⃣  Load the data -->
+    <script src="/fanfics/fanfics.js"></script>
 </head>
 <body>
     <header class="container header">
@@ -117,29 +119,6 @@
         <p id="fanficsMessage" style="display:none;color:#94a3b8;margin-top:1rem;"></p>
     </main>
 
-    <script>
-        // Inlined fanfic data to avoid loading issues on some hosts
-        window.FANFICS = [
-          {
-            id: "fic1",
-            title: "A Twist of Fate",
-            summary: "When quirks collide, destinies change. A short tale of adventure.",
-            chapters: [
-              "Chapter 1 content goes here. It's just a short example for demonstration.",
-              "Chapter 2 content continues the story with more twists and turns."
-            ]
-          },
-          {
-            id: "fic2",
-            title: "The Quiet Hero",
-            summary: "A hero rises from the shadows, unnoticed yet unwavering.",
-            chapters: [
-              "In chapter one we meet our quiet hero and explore their world.",
-              "Chapter two delves deeper into challenges and growth."
-            ]
-          }
-        ];
-    </script>
     <script>
         async function loadFanfics() {
             const messageEl = document.getElementById('fanficsMessage');
