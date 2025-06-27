@@ -129,7 +129,10 @@
             const messageEl = document.getElementById('fanficsMessage');
             const list = document.getElementById('fanficsList');
             try {
-                const response = await fetch('./fanfics/fanfics.json');
+                // Fetch fanfics from the static JSON file. Relative path keeps
+                // the request working even if the site is served from a
+                // subdirectory.
+                const response = await fetch('fanfics/fanfics.json');
                 if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
                 if (data.length === 0) {
