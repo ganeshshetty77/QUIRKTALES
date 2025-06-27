@@ -94,12 +94,41 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const id = parseInt(params.get('id'), 10) || 0;
+        const fallbackFanfics = [
+            {
+                id: 0,
+                title: 'The Vegetable War',
+                summary: 'Carrot and Broccoli battle in the garden.',
+                chapters: [
+                    'Chapter 1: The sun rose over the garden...',
+                    'Chapter 2: Tensions grow between the vegetables...',
+                    'Chapter 3: Peace returns as the vegetables learn to coexist.'
+                ]
+            },
+            {
+                id: 1,
+                title: 'Cabbage Hero',
+                summary: 'A heroic cabbage saves the day.',
+                chapters: [
+                    'Chapter 1: A humble beginning for the cabbage hero.',
+                    'Chapter 2: The villainous rabbit appears.',
+                    'Chapter 3: Triumph of the cabbage hero.'
+                ]
+            }
+        ];
         let chapters = [];
         let current = 0;
 
         async function loadFanfic() {
-            const response = await fetch('fanfics.json');
-            const fanfics = await response.json();
+            let fanfics = [];
+            try {
+                const response = await fetch('fanfics.json');
+                if (!response.ok) throw new Error('HTTP error');
+                fanfics = await response.json();
+            } catch (err) {
+                console.error('Failed to load fanfics.json, using fallback data.', err);
+                fanfics = fallbackFanfics;
+            }
             const fic = fanfics.find(f => f.id === id);
             if (!fic) return;
             document.getElementById('fanficTitle').textContent = fic.title;
