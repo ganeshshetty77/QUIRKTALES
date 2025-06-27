@@ -16,9 +16,11 @@
         #chapterContainer { margin-bottom:1rem; }
         .nav-buttons { margin-top:1rem; display:flex; gap:.5rem; }
         .nav-buttons button { background:#6366f1; color:white; padding:.4rem .8rem; border:none; border-radius:.3rem; cursor:pointer; font-weight:500; }
-        .nav-buttons button:hover:not(:disabled) { background:#4f46e5; }
-        .nav-buttons button:disabled { opacity:.5; cursor:not-allowed; }
+    .nav-buttons button:hover:not(:disabled) { background:#4f46e5; }
+    .nav-buttons button:disabled { opacity:.5; cursor:not-allowed; }
     </style>
+    <!-- 1️⃣  Load the data -->
+    <script src="/fanfics/fanfics.js"></script>
 </head>
 <body>
     <header class="container header">
@@ -37,29 +39,6 @@
             <button id="lastBtn">Last</button>
         </div>
     </main>
-    <script>
-        // Inlined fanfic data for reliability
-        window.FANFICS = [
-          {
-            id: "fic1",
-            title: "A Twist of Fate",
-            summary: "When quirks collide, destinies change. A short tale of adventure.",
-            chapters: [
-              "Chapter 1 content goes here. It's just a short example for demonstration.",
-              "Chapter 2 content continues the story with more twists and turns."
-            ]
-          },
-          {
-            id: "fic2",
-            title: "The Quiet Hero",
-            summary: "A hero rises from the shadows, unnoticed yet unwavering.",
-            chapters: [
-              "In chapter one we meet our quiet hero and explore their world.",
-              "Chapter two delves deeper into challenges and growth."
-            ]
-          }
-        ];
-    </script>
     <script>
         function getParam(name) {
             const p = new URLSearchParams(window.location.search);
