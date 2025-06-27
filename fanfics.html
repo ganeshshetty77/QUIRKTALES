@@ -129,7 +129,7 @@
             const messageEl = document.getElementById('fanficsMessage');
             const list = document.getElementById('fanficsList');
             try {
-                const resp = await fetch('fanfics/fanfics.json');
+                const resp = await fetch('/fanfics.json');
                 const data = await resp.json();
                 if (data.length === 0) {
                     messageEl.textContent = 'No fanfics available yet.';
