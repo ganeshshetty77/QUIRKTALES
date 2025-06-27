@@ -1,0 +1,34 @@
+{
+  "fanfics": [
+    {
+      "id": 1,
+      "title": "The Veggie Venture",
+      "author": "GreenPen",
+      "chapters": [
+        {
+          "title": "Chapter 1: Sproutlings",
+          "content": "Once upon a time in the garden, the vegetables began to stir with life."
+        },
+        {
+          "title": "Chapter 2: Harvest Moon",
+          "content": "As the moon rose, secrets of the soil started to unfold before them."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Mystic Carrot Chronicles",
+      "author": "CarrotMaster",
+      "chapters": [
+        {
+          "title": "Prologue",
+          "content": "Legends spoke of a glowing carrot hidden deep within the earth."
+        },
+        {
+          "title": "Chapter 1: Buried Secrets",
+          "content": "Deep beneath the soil, a mystery waited for the brave to unearth it."
+        }
+      ]
+    }
+  ]
+}
