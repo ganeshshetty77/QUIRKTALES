@@ -62,17 +62,68 @@
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
+            transition: transform 0.2s ease;
+        }
+        .fanfic-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         }
         .fanfic-title {
             margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #e2e8f0;
         }
         .fanfic-summary {
             margin: 0.5rem 0;
             display: none;
+            color: #94a3b8;
+            line-height: 1.5;
+            padding: 0.5rem 0;
         }
         .fanfic-actions {
             display: flex;
             gap: 1rem;
+            margin-top: 1rem;
+        }
+        .toggle-summary {
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s ease;
+        }
+        .toggle-summary:hover {
+            background-color: #475569;
+        }
+        .read-btn {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        .read-btn:hover {
+            background-color: #4f46e5;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+        .error {
+            text-align: center;
+            padding: 2rem;
+            color: #ef4444;
+            background-color: #1e293b;
+            border-radius: 8px;
+            margin: 1rem 0;
         }
     </style>
 </head>
@@ -85,35 +136,87 @@
     </header>
     <main class="container">
         <h1>Fanfic Library</h1>
-        <div id="fanficList"></div>
+        <div id="fanficList">
+            <div class="loading">Loading fanfics...</div>
+        </div>
     </main>
     <script>
+        // Fallback data in case JSON file fails to load
+        const fallbackFanfics = [
+            {
+                id: 0,
+                title: 'The Vegetable War',
+                summary: 'Carrot and Broccoli battle in the garden.',
+                chapters: [
+                    'Chapter 1: The sun rose over the garden...',
+                    'Chapter 2: Tensions grow between the vegetables...',
+                    'Chapter 3: Peace returns as the vegetables learn to coexist.'
+                ]
+            },
+            {
+                id: 1,
+                title: 'Cabbage Hero',
+                summary: 'A heroic cabbage saves the day.',
+                chapters: [
+                    'Chapter 1: A humble beginning for the cabbage hero.',
+                    'Chapter 2: The villainous rabbit appears.',
+                    'Chapter 3: Triumph of the cabbage hero.'
+                ]
+            }
+        ];
 
         async function loadLibrary() {
+            const list = document.getElementById('fanficList');
             let fanfics = [];
+            
             try {
+                console.log('Attempting to fetch fanfics.json...');
                 const response = await fetch('fanfics.json');
-                if (!response.ok) throw new Error('HTTP error');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 fanfics = await response.json();
+                console.log('Successfully loaded fanfics from JSON:', fanfics);
+                
             } catch (err) {
                 console.error('Failed to load fanfics.json, using fallback data.', err);
                 fanfics = fallbackFanfics;
+                
+                // Show a warning message
+                list.innerHTML = `
+                    <div class="error">
+                        <p><strong>Note:</strong> Could not load fanfics.json file. Using sample data instead.</p>
+                        <p>Error: ${err.message}</p>
+                    </div>
+                `;
             }
-            const list = document.getElementById('fanficList');
+            
+            // Clear the loading message
+            if (fanfics.length > 0) {
+                list.innerHTML = '';
+            }
+            
+            // Create fanfic items
             fanfics.forEach((fic) => {
                 const item = document.createElement('div');
                 item.className = 'fanfic-item';
                 item.innerHTML = `
-                    <h2 class="fanfic-title">${fic.title}</h2>
+                    <h2 class="fanfic-title">${escapeHtml(fic.title)}</h2>
                     <button class="toggle-summary">Show Summary</button>
-                    <p class="fanfic-summary">${fic.summary}</p>
+                    <p class="fanfic-summary">${escapeHtml(fic.summary)}</p>
                     <div class="fanfic-actions">
                         <button class="read-btn" data-id="${fic.id}">Read Fanfic</button>
                     </div>
                 `;
-                item.querySelector('.toggle-summary').addEventListener('click', (e) => {
-                    const summary = item.querySelector('.fanfic-summary');
-                    if (summary.style.display === 'none') {
+                
+                // Add event listener for summary toggle
+                const toggleBtn = item.querySelector('.toggle-summary');
+                const summary = item.querySelector('.fanfic-summary');
+                
+                toggleBtn.addEventListener('click', (e) => {
+                    if (summary.style.display === 'none' || summary.style.display === '') {
                         summary.style.display = 'block';
                         e.target.textContent = 'Hide Summary';
                     } else {
@@ -121,12 +224,35 @@
                         e.target.textContent = 'Show Summary';
                     }
                 });
-                item.querySelector('.read-btn').addEventListener('click', () => {
+                
+                // Add event listener for read button
+                const readBtn = item.querySelector('.read-btn');
+                readBtn.addEventListener('click', () => {
                     window.location.href = `fanfic_reader.html?id=${fic.id}`;
                 });
+                
                 list.appendChild(item);
             });
+            
+            // If no fanfics were loaded, show an error
+            if (fanfics.length === 0) {
+                list.innerHTML = `
+                    <div class="error">
+                        <p>No fanfics available at the moment.</p>
+                        <p>Please try again later or check if the fanfics.json file exists.</p>
+                    </div>
+                `;
+            }
         }
+        
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Load library when page is ready
         document.addEventListener('DOMContentLoaded', loadLibrary);
     </script>
 </body>
