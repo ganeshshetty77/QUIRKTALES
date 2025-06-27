@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanfics - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+        .back-btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            background-color: #4f46e5;
+        }
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem;
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            transition: border-color 0.3s ease;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        .fanfic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .fanfic-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .fanfic-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+        }
+        .fanfic-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .chapter-list {
+            margin-top: 1rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .chapter {
+            background-color: #334155;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            cursor: pointer;
+        }
+        .chapter:hover {
+            background-color: #475569;
+        }
+        .chapter-content {
+            margin-top: 0.5rem;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+        .loading-spinner {
+            border: 4px solid #334155;
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+        @media (max-width: 768px) {
+            .logo { font-size: 1.25rem; }
+            .back-btn { padding: 0.4rem 0.8rem; font-size: 0.875rem; gap: 0.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="container header">
+        <a href="index.html" class="logo">
+            <span>📚</span> VeggieFics
+        </a>
+        <a href="index.html" class="back-btn">
+            <span>←</span> Back to Home
+        </a>
+    </header>
+
+    <main class="container">
+        <input type="text" id="fanficSearch" class="search-input" placeholder="Search stories or chapters...">
+        <div class="fanfic-list" id="fanficList">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading stories...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let allFanfics = [];
+
+        async function fetchFanfics() {
+            try {
+                const response = await fetch('fanfics.json');
+                const data = await response.json();
+                allFanfics = data.fanfics;
+                displayFanfics(allFanfics);
+            } catch (error) {
+                console.error('Error loading fanfics:', error);
+                showError('Failed to load stories');
+            }
+        }
+
+        function displayFanfics(fanfics) {
+            const list = document.getElementById('fanficList');
+
+            if (!fanfics.length) {
+                list.innerHTML = '<div class="no-results"><h3>No stories found</h3></div>';
+                return;
+            }
+
+            list.innerHTML = fanfics.map(f => `
+                <div class="fanfic-card" data-id="${f.id}">
+                    <div class="fanfic-header">
+                        <h3 class="fanfic-title">${f.title}</h3>
+                        <p class="fanfic-author">by ${f.author}</p>
+                    </div>
+                    <div class="chapter-list">
+                        ${f.chapters.map((c, idx) => `
+                            <div class="chapter" data-index="${idx}">${c.title}</div>
+                            <div class="chapter-content">${c.content}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.fanfic-card').forEach(card => {
+                const chapterList = card.querySelector('.chapter-list');
+                card.querySelector('.fanfic-header').addEventListener('click', () => {
+                    chapterList.style.display = chapterList.style.display === 'flex' ? 'none' : 'flex';
+                });
+
+                card.querySelectorAll('.chapter').forEach((chap, i) => {
+                    const content = chapterList.querySelectorAll('.chapter-content')[i];
+                    chap.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                    });
+                });
+            });
+        }
+
+        function showError(message) {
+            const list = document.getElementById('fanficList');
+            list.innerHTML = `<div class="no-results"><h3>${message}</h3></div>`;
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('fanficSearch');
+
+            function debounce(func, wait) {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func(...args), wait);
+                };
+            }
+
+            const performSearch = debounce(term => {
+                term = term.toLowerCase();
+                const filtered = allFanfics.filter(f =>
+                    f.title.toLowerCase().includes(term) ||
+                    f.chapters.some(c => c.title.toLowerCase().includes(term) || c.content.toLowerCase().includes(term))
+                );
+                displayFanfics(filtered);
+            }, 300);
+
+            searchInput.addEventListener('input', e => performSearch(e.target.value));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchFanfics();
+            setupSearch();
+        });
+    </script>
+</body>
+</html>
