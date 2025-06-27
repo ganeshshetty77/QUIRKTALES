@@ -98,13 +98,6 @@
         .read-btn:hover {
             background-color: #4f46e5;
         }
-        .chapter {
-            margin-bottom: 1rem;
-        }
-        .chapter-title {
-            color: #e2e8f0;
-            margin-bottom: 0.3rem;
-        }
     </style>
 </head>
 <body>
@@ -124,7 +117,29 @@
         <p id="fanficsMessage" style="display:none;color:#94a3b8;margin-top:1rem;"></p>
     </main>
 
-    <script src="fanfics/fanfics.js"></script>
+    <script>
+        // Inlined fanfic data to avoid loading issues on some hosts
+        window.FANFICS = [
+          {
+            id: "fic1",
+            title: "A Twist of Fate",
+            summary: "When quirks collide, destinies change. A short tale of adventure.",
+            chapters: [
+              "Chapter 1 content goes here. It's just a short example for demonstration.",
+              "Chapter 2 content continues the story with more twists and turns."
+            ]
+          },
+          {
+            id: "fic2",
+            title: "The Quiet Hero",
+            summary: "A hero rises from the shadows, unnoticed yet unwavering.",
+            chapters: [
+              "In chapter one we meet our quiet hero and explore their world.",
+              "Chapter two delves deeper into challenges and growth."
+            ]
+          }
+        ];
+    </script>
     <script>
         async function loadFanfics() {
             const messageEl = document.getElementById('fanficsMessage');
@@ -158,23 +173,6 @@
                     readBtn.style.display = 'none';
                     ficEl.appendChild(readBtn);
 
-                    const chaptersEl = document.createElement('div');
-                    chaptersEl.className = 'chapters';
-                    chaptersEl.style.display = 'none';
-                    fic.chapters.forEach((text, idx) => {
-                        const chap = document.createElement('div');
-                        chap.className = 'chapter';
-                        const chapTitle = document.createElement('h3');
-                        chapTitle.className = 'chapter-title';
-                        chapTitle.textContent = `Chapter ${idx + 1}`;
-                        const chapContent = document.createElement('p');
-                        chapContent.textContent = text;
-                        chap.appendChild(chapTitle);
-                        chap.appendChild(chapContent);
-                        chaptersEl.appendChild(chap);
-                    });
-                    ficEl.appendChild(chaptersEl);
-
                     titleEl.addEventListener('click', () => {
                         const visible = summaryEl.style.display === 'block';
                         summaryEl.style.display = visible ? 'none' : 'block';
@@ -182,8 +180,7 @@
                     });
 
                     readBtn.addEventListener('click', () => {
-                        chaptersEl.style.display = chaptersEl.style.display === 'block' ? 'none' : 'block';
-                        readBtn.textContent = chaptersEl.style.display === 'block' ? 'Hide Fanfic' : 'Read Fanfic';
+                        window.location.href = `fanfic.html?id=${fic.id}`;
                     });
 
                     list.appendChild(ficEl);

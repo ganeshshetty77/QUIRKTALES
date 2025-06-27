@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Fanfic - VeggieFics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter', sans-serif; background:#0f172a; color:white; line-height:1.6; }
+        .container { max-width:1280px; margin:0 auto; padding:0 1rem; }
+        .header { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem; background:#1e293b; box-shadow:0 2px 4px rgba(0,0,0,0.1); border-radius:8px; margin-bottom:2rem; }
+        .logo { display:flex; align-items:center; font-weight:700; font-size:1.5rem; gap:.5rem; text-decoration:none; color:white; }
+        .back-btn { background:#6366f1; color:white; padding:.6rem 1.2rem; border:none; border-radius:.5rem; cursor:pointer; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:.5rem; }
+        .back-btn:hover { background:#4f46e5; }
+        #chapterContainer { margin-bottom:1rem; }
+        .nav-buttons { margin-top:1rem; display:flex; gap:.5rem; }
+        .nav-buttons button { background:#6366f1; color:white; padding:.4rem .8rem; border:none; border-radius:.3rem; cursor:pointer; font-weight:500; }
+        .nav-buttons button:hover:not(:disabled) { background:#4f46e5; }
+        .nav-buttons button:disabled { opacity:.5; cursor:not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="container header">
+        <a href="index.html" class="logo"><span>📚</span> VeggieFics</a>
+        <a href="fanfics.html" class="back-btn"><span>←</span> Back to Fanfics</a>
+    </header>
+    <main class="container">
+        <h1 id="ficTitle"></h1>
+        <div id="chapterContainer">
+            <h3 id="chapterTitle"></h3>
+            <p id="chapterText"></p>
+        </div>
+        <div class="nav-buttons">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+            <button id="lastBtn">Last</button>
+        </div>
+    </main>
+    <script>
+        // Inlined fanfic data for reliability
+        window.FANFICS = [
+          {
+            id: "fic1",
+            title: "A Twist of Fate",
+            summary: "When quirks collide, destinies change. A short tale of adventure.",
+            chapters: [
+              "Chapter 1 content goes here. It's just a short example for demonstration.",
+              "Chapter 2 content continues the story with more twists and turns."
+            ]
+          },
+          {
+            id: "fic2",
+            title: "The Quiet Hero",
+            summary: "A hero rises from the shadows, unnoticed yet unwavering.",
+            chapters: [
+              "In chapter one we meet our quiet hero and explore their world.",
+              "Chapter two delves deeper into challenges and growth."
+            ]
+          }
+        ];
+    </script>
+    <script>
+        function getParam(name) {
+            const p = new URLSearchParams(window.location.search);
+            return p.get(name);
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const ficId = getParam('id');
+            const fic = (window.FANFICS || []).find(f => f.id === ficId);
+            const titleEl = document.getElementById('ficTitle');
+            const chapterTitle = document.getElementById('chapterTitle');
+            const chapterText = document.getElementById('chapterText');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const lastBtn = document.getElementById('lastBtn');
+            if (!fic) {
+                titleEl.textContent = 'Fanfic not found';
+                document.querySelector('.nav-buttons').style.display = 'none';
+                return;
+            }
+            titleEl.textContent = fic.title;
+            let index = 0;
+            function render() {
+                chapterTitle.textContent = 'Chapter ' + (index + 1);
+                chapterText.textContent = fic.chapters[index];
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index >= fic.chapters.length - 1;
+            }
+            prevBtn.addEventListener('click', () => { if (index > 0) { index--; render(); } });
+            nextBtn.addEventListener('click', () => { if (index < fic.chapters.length - 1) { index++; render(); } });
+            lastBtn.addEventListener('click', () => { index = fic.chapters.length - 1; render(); });
+            render();
+        });
+    </script>
+</body>
+</html>
